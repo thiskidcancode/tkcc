@@ -304,7 +304,7 @@ export default function Home() {
         <footer className="py-8 text-center text-white/80" role="contentinfo">
           <div className="container mx-auto px-4">
             <p className="mb-4">
-              © 2024 ThisKidCanCode - Empowering Future Coders Since 2013
+              © 2025 ThisKidCanCode - Empowering Future Coders Since 2013
             </p>
             <div className="space-x-6">
               <a href="/privacy" className="hover:text-white transition-colors">
