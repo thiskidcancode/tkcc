@@ -48,7 +48,7 @@ if (certificateArn) {
     description: 'DNS infrastructure for ThisKidCanCode',
   });
 
-  marketingSiteProductionStack = new MarketingSiteStack(app, 'TkccMarketingSiteProductionStack', {
+  marketingSiteProductionStack = new MarketingSiteStack(app, 'TkccMarketingSiteStack', {
     env: productionEnv,
     description: 'Marketing site production infrastructure for ThisKidCanCode',
     hostedZone: dnsStack.hostedZone,

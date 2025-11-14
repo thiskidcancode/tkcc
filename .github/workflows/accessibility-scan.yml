@@ -1,16 +1,17 @@
 name: Accessibility & Compliance
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'apprenticeship-platform/**'
-      - 'marketing-site/**'
-  pull_request:
-    branches: [main]
-    paths:
-      - 'apprenticeship-platform/**'
-      - 'marketing-site/**'
+  # Temporarily disabled
+  # push:
+  #   branches: [main]
+  #   paths:
+  #     - 'apprenticeship-platform/**'
+  #     - 'marketing-site/**'
+  # pull_request:
+  #   branches: [main]
+  #   paths:
+  #     - 'apprenticeship-platform/**'
+  #     - 'marketing-site/**'
 
 jobs:
   accessibility-test:

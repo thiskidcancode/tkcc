@@ -30,7 +30,7 @@ if [ "$ENVIRONMENT" = "staging" ]; then
     STACK_NAME="TkccMarketingSiteStagingStack"
     AWS_PROFILE="tkcc-staging"
 else
-    STACK_NAME="TkccMarketingSiteProductionStack"
+    STACK_NAME="TkccMarketingSiteStack"
     AWS_PROFILE="tkcc-prod"
 fi
 
