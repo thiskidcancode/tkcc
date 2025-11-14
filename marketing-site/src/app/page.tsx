@@ -205,7 +205,7 @@ export default function Home() {
               </h2>
               <p className="text-xl text-white/90 max-w-3xl mx-auto">
                 Help us keep coding adventures FREE for every kid! Your support
-                powers the next generation of programmers.
+                powers the next generation of programmers. 🚀
               </p>
             </div>
 
