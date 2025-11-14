@@ -106,7 +106,7 @@ export default function Home() {
           </div>
 
           <h1 className="text-4xl md:text-7xl font-bold text-white mb-6 animate-pulse">
-            🚀 Empowering Future Coders Since 2013! 🚀
+            🚀 Empowering Future Coders Since 2013! 🌟
           </h1>
 
           <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-4xl mx-auto">
