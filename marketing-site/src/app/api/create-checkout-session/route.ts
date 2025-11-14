@@ -9,7 +9,9 @@ const stripe = process.env.STRIPE_SECRET_KEY
 
 export async function POST(request: NextRequest) {
   if (!stripe) {
-    return NextResponse.json({ error: 'Stripe not configured' }, { status: 500 });
+    return NextResponse.json({ 
+      error: 'Payment system is currently unavailable. Please try again later or contact support.' 
+    }, { status: 503 });
   }
   
   try {
@@ -38,6 +40,9 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ sessionId: session.id });
   } catch (error) {
-    return NextResponse.json({ error: 'Error creating checkout session' }, { status: 500 });
+    console.error('Stripe checkout error:', error);
+    return NextResponse.json({ 
+      error: 'Unable to process payment at this time. Please try again later.' 
+    }, { status: 500 });
   }
 }

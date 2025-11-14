@@ -14,16 +14,26 @@ export const useStripe = () => {
 
     const stripe = await stripePromise;
     
-    const response = await fetch('/api/create-checkout-session', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ amount, type }),
-    });
-    
-    const { sessionId } = await response.json();
-    
-    if (stripe) {
-      await stripe.redirectToCheckout({ sessionId });
+    try {
+      const response = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount, type }),
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok || data.error) {
+        alert(`Payment setup error: ${data.error || 'Please try again later'}`);
+        return;
+      }
+      
+      if (stripe && data.sessionId) {
+        await stripe.redirectToCheckout({ sessionId: data.sessionId });
+      }
+    } catch (error) {
+      alert('Payment system temporarily unavailable. Please try again later.');
+      console.error('Stripe error:', error);
     }
   };
 

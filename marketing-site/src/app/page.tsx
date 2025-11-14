@@ -15,8 +15,8 @@ import { useStripe } from "../hooks/useStripe";
 
 export default function Home() {
   const [showConfetti, setShowConfetti] = useState(false);
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
+  const [mounted, setMounted] = useState(false);
+  const [showComingSoon, setShowComingSoon] = useState(false);
 
   const structuredData = {
     '@context': 'https://schema.org',
@@ -41,6 +41,7 @@ export default function Home() {
   };
 
   useEffect(() => {
+    setMounted(true);
     // Trigger confetti animation on load
     setTimeout(() => setShowConfetti(true), 1000);
     setTimeout(() => setShowConfetti(false), 6000);
@@ -48,25 +49,11 @@ export default function Home() {
 
   const { createCheckoutSession } = useStripe();
 
-  const handleDonation = (amount: number) => {
-    createCheckoutSession(amount, 'donation');
-  };
-
-  const handleSubscription = () => {
-    createCheckoutSession(25, 'subscription');
-  };
-
-  const handleNewsletter = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Newsletter/SMS signup placeholder
-    console.log("Newsletter signup:", { email, phone });
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-green-500 relative overflow-hidden">
       {/* Animated Background */}
       <div className="absolute inset-0">
-        {[...Array(30)].map((_, i) => (
+        {mounted && [...Array(30)].map((_, i) => (
           <div
             key={i}
             className="absolute animate-pulse"
@@ -83,7 +70,7 @@ export default function Home() {
       </div>
 
       {/* Confetti Effect */}
-      {showConfetti && (
+      {mounted && showConfetti && (
         <div className="fixed inset-0 pointer-events-none z-50">
           {[...Array(30)].map((_, i) => (
             <div
@@ -147,7 +134,10 @@ export default function Home() {
             </div>
           </div>
 
-          <button className="bg-gradient-to-r from-yellow-500 to-orange-600 text-white px-12 py-4 rounded-lg text-xl font-bold hover:scale-105 transition-transform duration-200 shadow-lg">
+          <button 
+            onClick={() => setShowComingSoon(true)}
+            className="bg-gradient-to-r from-yellow-500 to-orange-600 text-white px-12 py-4 rounded-lg text-xl font-bold hover:scale-105 transition-transform duration-200 shadow-lg"
+          >
             🎮 Start Your Coding Adventure!
           </button>
         </section>
@@ -246,73 +236,69 @@ export default function Home() {
                     {tier.title}
                   </h3>
                   <div className="text-3xl font-bold text-purple-600 mb-4">
-                    ${tier.amount}
+                    ${tier.amount}/month
                   </div>
                   <p className="text-gray-600 mb-6">{tier.description}</p>
                   <button
-                    onClick={() => handleDonation(tier.amount)}
+                    onClick={() => createCheckoutSession(tier.amount, 'subscription')}
                     className="bg-gradient-to-r from-purple-500 to-blue-600 text-white px-8 py-3 rounded-lg font-bold hover:scale-105 transition-transform duration-200 w-full"
                   >
-                    Donate ${tier.amount}
+                    Subscribe ${tier.amount}/month
                   </button>
                 </div>
               ))}
             </div>
 
             <div className="text-center mt-8">
-              <button 
-                onClick={handleSubscription}
-                className="bg-gradient-to-r from-green-500 to-teal-600 text-white px-8 py-3 rounded-lg font-bold hover:scale-105 transition-transform duration-200"
-              >
-                💳 Monthly Subscription ($25/month)
-              </button>
+              <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-8 max-w-md mx-auto">
+                <div className="text-4xl mb-4">💝</div>
+                <h3 className="text-2xl font-bold text-gray-800 mb-4">One-Time Donation</h3>
+                <p className="text-gray-600 mb-6">Choose your own amount to support our mission</p>
+                <div className="grid grid-cols-3 gap-3 mb-4">
+                  {[25, 50, 100].map((amount) => (
+                    <button
+                      key={amount}
+                      onClick={() => createCheckoutSession(amount, 'donation')}
+                      className="bg-gradient-to-r from-green-500 to-teal-600 text-white px-4 py-2 rounded-lg font-bold hover:scale-105 transition-transform duration-200"
+                    >
+                      ${amount}
+                    </button>
+                  ))}
+                </div>
+                <button
+                  onClick={() => {
+                    const amount = prompt('Enter donation amount:');
+                    if (amount && !isNaN(Number(amount)) && Number(amount) > 0) {
+                      createCheckoutSession(Number(amount), 'donation');
+                    }
+                  }}
+                  className="bg-gradient-to-r from-green-500 to-teal-600 text-white px-6 py-2 rounded-lg font-bold hover:scale-105 transition-transform duration-200 w-full"
+                >
+                  💳 Custom Amount
+                </button>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Newsletter Section */}
-        <section className="bg-white/95 backdrop-blur-sm py-16" aria-labelledby="newsletter-heading">
-          <div className="container mx-auto px-4 max-w-2xl">
-            <div className="text-center mb-8">
-              <h2 id="newsletter-heading" className="text-4xl font-bold text-gray-800 mb-4">
-                📱 Join the Coding Heroes Community!
-              </h2>
-              <p className="text-xl text-gray-600">
-                Get coding tips, success stories, and adventure updates!
+        {/* Coming Soon Modal */}
+        {showComingSoon && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-2xl p-8 max-w-md w-full text-center">
+              <div className="text-6xl mb-4">🚀</div>
+              <h3 className="text-2xl font-bold text-gray-800 mb-4">Soon!</h3>
+              <p className="text-gray-600 mb-6">
+                Our coding adventure platform is launching soon! Get ready for an amazing journey into programming.
               </p>
-            </div>
-
-            <form onSubmit={handleNewsletter} className="space-y-4" aria-label="Newsletter signup form">
-              <div>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Your email address"
-                  className="w-full p-4 border border-gray-300 rounded-lg text-lg"
-                  required
-                  aria-label="Email address"
-                />
-              </div>
-              <div>
-                <input
-                  type="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="Phone number (optional SMS updates)"
-                  className="w-full p-4 border border-gray-300 rounded-lg text-lg"
-                  aria-label="Phone number (optional)"
-                />
-              </div>
               <button
-                type="submit"
-                className="w-full bg-gradient-to-r from-orange-500 to-red-600 text-white px-8 py-4 rounded-lg text-xl font-bold hover:scale-105 transition-transform duration-200"
+                onClick={() => setShowComingSoon(false)}
+                className="bg-gradient-to-r from-purple-500 to-blue-600 text-white px-8 py-3 rounded-lg font-bold hover:scale-105 transition-transform duration-200"
               >
-                🚀 Join the Adventure!
+                Got it!
               </button>
-            </form>
+            </div>
           </div>
-        </section>
+        )}
 
         {/* Footer */}
         <footer className="py-8 text-center text-white/80" role="contentinfo">
