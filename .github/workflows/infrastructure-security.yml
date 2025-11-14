@@ -1,7 +1,8 @@
 name: Infrastructure Security
 
 on:
-  # Temporarily disabled
+  workflow_dispatch:  # Manual trigger only
+  # Temporarily disabled automatic triggers
   # push:
   #   branches: [main]
   #   paths:

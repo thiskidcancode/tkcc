@@ -1,7 +1,8 @@
 name: Security Scanning
 
 on:
-  # Temporarily disabled
+  workflow_dispatch:  # Manual trigger only
+  # Temporarily disabled automatic triggers
   # push:
   #   branches: [main, develop]
   # pull_request:
