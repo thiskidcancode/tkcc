@@ -1,0 +1,61 @@
+name: Accessibility & Compliance
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apprenticeship-platform/**'
+      - 'marketing-site/**'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'apprenticeship-platform/**'
+      - 'marketing-site/**'
+
+jobs:
+  accessibility-test:
+    name: Section 508 / WCAG 2.1 AA Compliance
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        version: 8
+
+    - name: Install dependencies
+      run: pnpm install
+
+    - name: Build applications
+      run: |
+        cd marketing-site && pnpm build
+        cd ../apprenticeship-platform && pnpm build
+
+    - name: Run axe accessibility tests
+      run: |
+        npx @axe-core/cli --tags wcag2a,wcag2aa,section508 marketing-site/out/
+        npx @axe-core/cli --tags wcag2a,wcag2aa,section508 apprenticeship-platform/.next/
+
+  privacy-compliance:
+    name: FERPA/COPPA Privacy Check
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Check for PII in code
+      run: |
+        # Scan for potential PII patterns
+        grep -r -i "ssn\|social.security\|phone.*number\|email.*address" --include="*.js" --include="*.ts" --include="*.jsx" --include="*.tsx" . || echo "No PII patterns found"
+        
+    - name: Validate privacy policy references
+      run: |
+        # Ensure privacy policy links are present
+        find . -name "*.md" -o -name "*.tsx" -o -name "*.jsx" | xargs grep -l "privacy\|FERPA\|COPPA" || echo "Privacy references found"

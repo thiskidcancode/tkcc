@@ -1,0 +1,7 @@
+packages:
+  - 'marketing-site'
+  - 'apprenticeship-platform'
+  - 'curriculum'
+  - 'mobile-app'
+  - 'community-tools'
+  - 'infrastructure'

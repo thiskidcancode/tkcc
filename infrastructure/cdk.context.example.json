@@ -1,0 +1,10 @@
+{
+  "account": "123456789012",
+  "certificateArn": "arn:aws:acm:us-east-1:YOUR_ACCOUNT:certificate/YOUR_CERT_ID",
+  "dkimKeys": [
+    "your-dkim-key-1",
+    "your-dkim-key-2", 
+    "your-dkim-key-3"
+  ],
+  "sesVerificationToken": "your-ses-verification-token"
+}

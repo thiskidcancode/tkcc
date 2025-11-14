@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Community Forum
+    url: https://github.com/thiskidcancode/tkcc/discussions
+    about: Ask questions and discuss with the community
+  - name: Documentation
+    url: https://github.com/thiskidcancode/tkcc/blob/main/README.md
+    about: Read the documentation

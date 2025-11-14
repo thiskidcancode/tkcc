@@ -1,0 +1,80 @@
+#!/bin/bash
+
+# Security audit pre-commit hook for ThisKidCanCode
+# Prevents accidental credential commits
+
+set -e
+
+echo "🔒 Running security audit..."
+
+# Get staged files only (not entire repo)
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM)
+
+if [ -z "$STAGED_FILES" ]; then
+  echo "✅ No staged files to check"
+  exit 0
+fi
+
+# Check for high-confidence credential patterns in staged files
+VIOLATIONS=0
+
+# AWS Access Keys (high confidence)
+if echo "$STAGED_FILES" | xargs grep -l "AKIA[0-9A-Z]\{16\}" 2>/dev/null; then
+  echo "❌ AWS Access Key detected!"
+  VIOLATIONS=$((VIOLATIONS + 1))
+fi
+
+# GitHub Personal Access Tokens
+if echo "$STAGED_FILES" | xargs grep -l "ghp_[0-9a-zA-Z]\{36\}" 2>/dev/null; then
+  echo "❌ GitHub token detected!"
+  VIOLATIONS=$((VIOLATIONS + 1))
+fi
+
+# Private keys
+if echo "$STAGED_FILES" | xargs grep -l "BEGIN.*PRIVATE.*KEY" 2>/dev/null; then
+  echo "❌ Private key detected!"
+  VIOLATIONS=$((VIOLATIONS + 1))
+fi
+
+# AWS Account Numbers (12 digits)
+if echo "$STAGED_FILES" | xargs grep -l "[0-9]\{12\}" 2>/dev/null; then
+  echo "❌ AWS Account number detected!"
+  VIOLATIONS=$((VIOLATIONS + 1))
+fi
+
+# AWS ARNs with account numbers
+if echo "$STAGED_FILES" | xargs grep -l "arn:aws:[^:]*:[^:]*:[0-9]\{12\}:" 2>/dev/null; then
+  echo "❌ Hardcoded AWS ARN with account number detected!"
+  VIOLATIONS=$((VIOLATIONS + 1))
+fi
+
+# Check for .env files being committed
+if echo "$STAGED_FILES" | grep -E "\.env$|\.env\.local$|\.env\.production$" 2>/dev/null; then
+  echo "❌ Environment file detected!"
+  VIOLATIONS=$((VIOLATIONS + 1))
+fi
+
+# Suspicious patterns (lower confidence, more targeted)
+SUSPICIOUS_PATTERNS=(
+  "password\s*=\s*['\"][^'\"]{8,}"
+  "secret\s*=\s*['\"][^'\"]{16,}"
+  "api_key\s*=\s*['\"][^'\"]{16,}"
+  "token\s*=\s*['\"][^'\"]{20,}"
+)
+
+for pattern in "${SUSPICIOUS_PATTERNS[@]}"; do
+  if echo "$STAGED_FILES" | xargs grep -l -E "$pattern" 2>/dev/null; then
+    echo "⚠️  Suspicious credential pattern detected: $pattern"
+    VIOLATIONS=$((VIOLATIONS + 1))
+  fi
+done
+
+if [ $VIOLATIONS -gt 0 ]; then
+  echo ""
+  echo "🚨 Security violations found! Commit blocked."
+  echo "💡 If these are false positives, add to .gitignore or use git commit --no-verify"
+  exit 1
+fi
+
+echo "✅ Security audit passed"
+exit 0

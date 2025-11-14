@@ -1,0 +1,45 @@
+{
+  "name": "@thiskidcancode/tkcc",
+  "private": true,
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+
+  "scripts": {
+    "dev:marketing": "cd marketing-site && pnpm run dev",
+    "dev:apprenticeship": "cd apprenticeship-platform && pnpm run dev",
+    "build:all": "pnpm -r build",
+    "test:all": "pnpm -r test",
+    "deploy:marketing": "cd marketing-site && pnpm run deploy",
+    "deploy:apprenticeship": "cd apprenticeship-platform && vercel deploy",
+    "deploy:infrastructure": "cd infrastructure && pnpm cdk deploy --all",
+    "infrastructure:diff": "cd infrastructure && pnpm cdk diff",
+    "commit": "cz",
+    "prepare": "husky install",
+    "test": "jest --config config/testing/jest.config.js",
+    "test:watch": "jest --config config/testing/jest.config.js --watch",
+    "test:coverage": "jest --config config/testing/jest.config.js --coverage",
+    "test:e2e": "playwright test --config config/testing/playwright.config.ts",
+    "test:all": "pnpm test && pnpm test:e2e"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^18.4.3",
+    "@commitlint/config-conventional": "^18.4.3",
+    "commitizen": "^4.3.0",
+    "cz-conventional-changelog": "^3.3.0",
+    "husky": "^8.0.3",
+    "@testing-library/react": "^14.1.2",
+    "@testing-library/jest-dom": "^6.1.5",
+    "@testing-library/user-event": "^14.5.1",
+    "@playwright/test": "^1.40.1",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "msw": "^2.0.11"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  }
+}

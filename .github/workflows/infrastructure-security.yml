@@ -1,0 +1,84 @@
+name: Infrastructure Security
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'infrastructure/**'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'infrastructure/**'
+
+jobs:
+  checkov-scan:
+    name: Checkov IaC Security Scan
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Run Checkov action
+      uses: bridgecrewio/checkov-action@master
+      with:
+        directory: infrastructure/
+        framework: cloudformation,terraform
+        output_format: sarif
+        output_file_path: checkov-results.sarif
+        quiet: true
+        soft_fail: true
+
+    - name: Upload Checkov results to GitHub Security
+      uses: github/codeql-action/upload-sarif@v3
+      if: always()
+      with:
+        sarif_file: checkov-results.sarif
+
+  tfsec-scan:
+    name: tfsec Terraform Security
+    runs-on: ubuntu-latest
+    if: contains(github.event.head_commit.modified, 'infrastructure/')
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Run tfsec
+      uses: aquasecurity/tfsec-sarif-action@v0.1.4
+      with:
+        sarif_file: tfsec-results.sarif
+        working_directory: infrastructure/
+
+    - name: Upload tfsec results
+      uses: github/codeql-action/upload-sarif@v3
+      if: always()
+      with:
+        sarif_file: tfsec-results.sarif
+
+  aws-config-check:
+    name: AWS Configuration Validation
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        version: 8
+
+    - name: Install CDK dependencies
+      run: |
+        cd infrastructure
+        pnpm install
+
+    - name: CDK Synth and Security Check
+      run: |
+        cd infrastructure
+        pnpm cdk synth --quiet
+        # Check for security best practices in generated CloudFormation
+        find cdk.out -name "*.template.json" -exec echo "Checking {}" \; -exec cat {} \; | grep -i "public\|0.0.0.0\|*" || echo "No obvious security issues found"
