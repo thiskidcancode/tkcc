@@ -100,8 +100,9 @@ export default function Home() {
               src="/tkccFbLogo.png"
               alt="ThisKidCanCode Logo"
               className="mx-auto h-30 w-auto mb-6 rounded-2xl"
-              width={0}
-              height={0}
+              width={200}
+              height={200}
+              priority
             />
           </div>
 
