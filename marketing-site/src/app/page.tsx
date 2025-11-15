@@ -286,7 +286,7 @@ export default function Home() {
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-2xl p-8 max-w-md w-full text-center">
               <div className="text-6xl mb-4">🚀</div>
-              <h3 className="text-2xl font-bold text-gray-800 mb-4">Soon!</h3>
+              <h3 className="text-2xl font-bold text-gray-800 mb-4">Coming Soon!</h3>
               <p className="text-gray-600 mb-6">
                 Our coding adventure platform is launching soon! Get ready for an amazing journey into programming.
               </p>
