@@ -1,10 +1,12 @@
-name: Deploy Marketing Site to Staging
+# DISABLED: Now using Vercel for deployment
+# To re-enable: remove this comment and rename file back to .yml
+name: Deploy Marketing Site to Staging (DISABLED)
 
-on:
-  push:
-    branches: [main]
-    paths: ['marketing-site/**']
-  workflow_dispatch:
+# on:
+#   push:
+#     branches: [main]
+#     paths: ['marketing-site/**']
+#   workflow_dispatch:
 
 jobs:
   deploy:

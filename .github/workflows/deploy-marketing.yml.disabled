@@ -1,14 +1,16 @@
-name: Deploy Marketing Site
+# DISABLED: Now using Vercel for deployment
+# To re-enable: remove this comment and rename file back to .yml
+name: Deploy Marketing Site (DISABLED)
 
-on:
-  push:
-    branches: [main]
-    paths:
-      - 'marketing-site/**'
-  pull_request:
-    branches: [main]
-    paths:
-      - 'marketing-site/**'
+# on:
+#   push:
+#     branches: [main]
+#     paths:
+#       - 'marketing-site/**'
+#   pull_request:
+#     branches: [main]
+#     paths:
+#       - 'marketing-site/**'
 
 jobs:
   deploy:
@@ -51,8 +53,9 @@ jobs:
         
     - name: Deploy to S3
       run: |
-        aws s3 sync out/ s3://${{ secrets.S3_BUCKET_NAME }} --delete
-        echo "✅ Marketing site deployed to ${{ github.ref == 'refs/heads/main' && 'PRODUCTION' || 'SANDBOX' }} successfully!"
+        # For now, disable S3 deployment since we need a serverless platform for API routes
+        echo "⚠️ Static S3 deployment disabled - API routes require serverless platform"
+        echo "Consider deploying to Vercel, Netlify, or AWS Lambda for full functionality"
       working-directory: ./marketing-site
       
     - name: Invalidate CloudFront

@@ -108,6 +108,7 @@ Thumbs.db
 docs/ABOUT.md
 docs/strategy/*
 docs/devSecOps/STATE*
+docs/grants/*
 
 # Old context files
 oldcontext/
