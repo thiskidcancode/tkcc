@@ -1,15 +1,6 @@
 import '@testing-library/jest-dom'
 import React from 'react'
 
-// Mock lucide-react icons
-jest.mock('lucide-react', () => ({
-  ChevronRight: (props) => React.createElement('svg', { ...props, 'data-testid': 'chevron-right' }),
-  Star: (props) => React.createElement('svg', { ...props, 'data-testid': 'star' }),
-  Rocket: (props) => React.createElement('svg', { ...props, 'data-testid': 'rocket' }),
-  Trophy: (props) => React.createElement('svg', { ...props, 'data-testid': 'trophy' }),
-  Heart: (props) => React.createElement('svg', { ...props, 'data-testid': 'heart' }),
-}))
-
 // Mock recharts
 jest.mock('recharts', () => ({
   BarChart: (props) => React.createElement('div', { 'data-testid': 'bar-chart' }, props.children),
