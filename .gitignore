@@ -81,7 +81,8 @@ cdk.context.json
 
 # Gatsby files
 .cache/
-public
+# Note: public folders contain static assets and should be committed
+# public
 
 # Storybook build outputs
 .out
