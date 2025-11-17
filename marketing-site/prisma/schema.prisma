@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model WaitlistEntry {
+  id           String   @id
+  name         String   @db.VarChar(100)
+  email        String   @unique @db.VarChar(255)
+  phone        String   @db.VarChar(20)
+  twilioOptIn  Boolean  @default(false) @map("twilio_opt_in")
+  registeredAt DateTime @default(now()) @map("registered_at")
+  position     Int
+
+  @@map("waitlist_entries")
+}
+
+model RateLimit {
+  ip            String   @id @db.VarChar(45)
+  registrations String   @db.Text
+  lastCleanup   DateTime @default(now()) @map("last_cleanup")
+
+  @@map("rate_limits")
+}
+
+model WaitlistMetadata {
+  key   String @id @db.VarChar(50)
+  value Int
+
+  @@map("waitlist_metadata")
+}

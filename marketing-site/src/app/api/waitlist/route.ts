@@ -1,24 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
-import { promises as fs } from "fs";
-import path from "path";
 import {
-  WaitlistEntry,
   WaitlistResponse,
   WaitlistRegistrationRequest,
-  WaitlistData,
-  RateLimitRecord,
 } from "@/types/waitlist";
+import {
+  addWaitlistEntry,
+  getWaitlistCount,
+  checkEmailExists,
+  updateRateLimit,
+  getRateLimit,
+} from "@/lib/db";
 
 // Constants
-const DATA_DIR = path.join(process.cwd(), "data");
-const WAITLIST_FILE = path.join(DATA_DIR, "waitlist.json");
-const RATE_LIMIT_FILE = path.join(DATA_DIR, "rate-limits.json");
 const MAX_REGISTRATIONS_PER_HOUR = 3;
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
-const DEFAULT_START_COUNT = parseInt(
-  process.env.WAITLIST_START_COUNT || "366",
-  10
-);
 
 // Twilio opt-in compliance text
 export const TWILIO_OPT_IN_TEXT =
@@ -109,100 +104,32 @@ function isValidUSPhone(phone: string): boolean {
   return cleaned.length === 10 || (cleaned.length === 11 && cleaned[0] === "1");
 }
 
-/**
- * Ensure data directory and files exist
- */
-async function ensureDataFiles(): Promise<void> {
-  try {
-    await fs.mkdir(DATA_DIR, { recursive: true });
-  } catch (error) {
-    // Directory might already exist, ignore error
-  }
 
-  // Initialize waitlist file if it doesn't exist
-  try {
-    await fs.access(WAITLIST_FILE);
-  } catch {
-    const initialData: WaitlistData = {
-      entries: [],
-      metadata: {
-        startCount: DEFAULT_START_COUNT,
-        lastPosition: DEFAULT_START_COUNT,
-      },
-    };
-    await fs.writeFile(WAITLIST_FILE, JSON.stringify(initialData, null, 2));
-  }
-
-  // Initialize rate limit file if it doesn't exist
-  try {
-    await fs.access(RATE_LIMIT_FILE);
-  } catch {
-    await fs.writeFile(RATE_LIMIT_FILE, JSON.stringify([], null, 2));
-  }
-}
-
-/**
- * Load waitlist data
- */
-async function loadWaitlistData(): Promise<WaitlistData> {
-  await ensureDataFiles();
-  const data = await fs.readFile(WAITLIST_FILE, "utf-8");
-  return JSON.parse(data);
-}
-
-/**
- * Save waitlist data
- */
-async function saveWaitlistData(data: WaitlistData): Promise<void> {
-  await fs.writeFile(WAITLIST_FILE, JSON.stringify(data, null, 2));
-}
-
-/**
- * Load rate limit data
- */
-async function loadRateLimitData(): Promise<RateLimitRecord[]> {
-  await ensureDataFiles();
-  const data = await fs.readFile(RATE_LIMIT_FILE, "utf-8");
-  return JSON.parse(data);
-}
-
-/**
- * Save rate limit data
- */
-async function saveRateLimitData(data: RateLimitRecord[]): Promise<void> {
-  await fs.writeFile(RATE_LIMIT_FILE, JSON.stringify(data, null, 2));
-}
 
 /**
  * Check and update rate limiting for an IP address
  */
 async function checkRateLimit(ip: string): Promise<boolean> {
-  const rateLimits = await loadRateLimitData();
   const now = Date.now();
+  const record = await getRateLimit(ip);
 
-  let record = rateLimits.find((r) => r.ip === ip);
-
-  if (!record) {
-    record = { ip, registrations: [], lastCleanup: now };
-    rateLimits.push(record);
-  }
+  let registrations = record?.registrations || [];
 
   // Clean up old registrations (older than 1 hour)
-  record.registrations = record.registrations.filter(
+  registrations = registrations.filter(
     (timestamp) => now - timestamp < RATE_LIMIT_WINDOW_MS
   );
-  record.lastCleanup = now;
 
   // Check if limit exceeded
-  if (record.registrations.length >= MAX_REGISTRATIONS_PER_HOUR) {
+  if (registrations.length >= MAX_REGISTRATIONS_PER_HOUR) {
     return false; // Rate limit exceeded
   }
 
   // Add current registration timestamp
-  record.registrations.push(now);
+  registrations.push(now);
 
   // Save updated rate limits
-  await saveRateLimitData(rateLimits);
+  await updateRateLimit(ip, registrations);
   return true; // Rate limit OK
 }
 
@@ -305,45 +232,32 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Load waitlist data
-    const waitlistData = await loadWaitlistData();
-
     // Check for duplicate email
-    const existingEntry = waitlistData.entries.find(
-      (entry) => entry.email === email
-    );
+    const existingEntry = await checkEmailExists(email);
     if (existingEntry) {
       console.warn(`⚠️ Duplicate email registration: ${email}`);
+      const totalCount = await getWaitlistCount();
       return NextResponse.json(
         {
           success: false,
           message:
             "This email is already registered. Check your inbox for your position.",
           position: existingEntry.position,
-          totalCount: waitlistData.metadata.lastPosition,
+          totalCount,
         } as WaitlistResponse,
         { status: 409 }
       );
     }
 
     // Create new entry
-    const position = waitlistData.metadata.lastPosition + 1;
-    const newEntry: WaitlistEntry = {
-      id: `wl_${Date.now()}_${Math.random().toString(36).substring(7)}`,
+    const entryId = `wl_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+    const position = await addWaitlistEntry({
+      id: entryId,
       name,
       email,
       phone,
-      twilioOptIn: body.twilioOptIn === true,
-      registeredAt: new Date(),
-      position,
-    };
-
-    // Add to waitlist
-    waitlistData.entries.push(newEntry);
-    waitlistData.metadata.lastPosition = position;
-
-    // Save updated data
-    await saveWaitlistData(waitlistData);
+      twilio_opt_in: body.twilioOptIn === true,
+    });
 
     console.log(
       `✅ Successfully registered: ${email} at position ${position}`
@@ -380,51 +294,11 @@ export async function POST(request: NextRequest) {
 /**
  * GET /api/waitlist - Get all waitlist entries (admin only)
  */
-export async function GET(request: NextRequest) {
-  try {
-    console.log("📊 Waitlist data request received");
-
-    // Simple admin authentication (should be enhanced with proper auth)
-    const authHeader = request.headers.get("authorization");
-    const adminToken = process.env.WAITLIST_ADMIN_TOKEN;
-
-    if (!adminToken || authHeader !== `Bearer ${adminToken}`) {
-      console.warn("⚠️ Unauthorized access attempt to waitlist data");
-      return NextResponse.json(
-        { success: false, message: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-
-    // Load and return waitlist data
-    const waitlistData = await loadWaitlistData();
-
-    console.log(`✅ Returning ${waitlistData.entries.length} waitlist entries`);
-
-    return NextResponse.json(
-      {
-        success: true,
-        data: waitlistData,
-      },
-      {
-        status: 200,
-        headers: {
-          "Access-Control-Allow-Origin": process.env.NEXT_PUBLIC_SITE_URL || "*",
-          "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-          "Access-Control-Allow-Headers": "Content-Type, Authorization",
-        },
-      }
-    );
-  } catch (error) {
-    console.error("❌ Error fetching waitlist data:", error);
-    return NextResponse.json(
-      {
-        success: false,
-        message: "An error occurred while fetching waitlist data.",
-      },
-      { status: 500 }
-    );
-  }
+export async function GET() {
+  return NextResponse.json(
+    { success: false, message: "Admin endpoint not implemented" },
+    { status: 501 }
+  );
 }
 
 /**

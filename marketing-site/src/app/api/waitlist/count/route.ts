@@ -1,49 +1,6 @@
 import { NextResponse } from "next/server";
-import { promises as fs } from "fs";
-import path from "path";
-import { WaitlistData, WaitlistResponse } from "@/types/waitlist";
-
-// Constants
-const DATA_DIR = path.join(process.cwd(), "data");
-const WAITLIST_FILE = path.join(DATA_DIR, "waitlist.json");
-const DEFAULT_START_COUNT = parseInt(
-  process.env.WAITLIST_START_COUNT || "0",
-  10
-);
-
-/**
- * Ensure data directory and files exist
- */
-async function ensureDataFiles(): Promise<void> {
-  try {
-    await fs.mkdir(DATA_DIR, { recursive: true });
-  } catch (error) {
-    // Directory might already exist, ignore error
-  }
-
-  // Initialize waitlist file if it doesn't exist
-  try {
-    await fs.access(WAITLIST_FILE);
-  } catch {
-    const initialData: WaitlistData = {
-      entries: [],
-      metadata: {
-        startCount: DEFAULT_START_COUNT,
-        lastPosition: DEFAULT_START_COUNT,
-      },
-    };
-    await fs.writeFile(WAITLIST_FILE, JSON.stringify(initialData, null, 2));
-  }
-}
-
-/**
- * Load waitlist data
- */
-async function loadWaitlistData(): Promise<WaitlistData> {
-  await ensureDataFiles();
-  const data = await fs.readFile(WAITLIST_FILE, "utf-8");
-  return JSON.parse(data);
-}
+import { WaitlistResponse } from "@/types/waitlist";
+import { getWaitlistCount } from "@/lib/db";
 
 /**
  * GET /api/waitlist/count - Get current waitlist count
@@ -52,9 +9,7 @@ export async function GET() {
   try {
     console.log("📊 Waitlist count request received");
 
-    // Load waitlist data
-    const waitlistData = await loadWaitlistData();
-    const totalCount = waitlistData.metadata.lastPosition;
+    const totalCount = await getWaitlistCount();
 
     console.log(`✅ Current waitlist count: ${totalCount}`);
 

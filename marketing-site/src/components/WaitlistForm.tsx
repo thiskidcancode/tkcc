@@ -159,7 +159,10 @@ export default function WaitlistForm(props: WaitlistFormProps) {
             notify you as soon as we launch!
           </p>
           <button
-            onClick={onClose}
+            onClick={() => {
+              if (props.onSuccess) props.onSuccess();
+              onClose();
+            }}
             className="bg-linear-to-r from-green-500 to-teal-600 text-white px-8 py-3 rounded-lg font-bold hover:scale-105 transition-transform duration-200"
           >
             Awesome!
