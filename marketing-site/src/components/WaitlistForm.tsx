@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 interface WaitlistFormProps {
   onClose: () => void;
@@ -102,6 +102,7 @@ export default function WaitlistForm(props: WaitlistFormProps) {
     setIsSubmitting(true);
 
     try {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { honeypot, ...submitData } = formData;
       const res = await fetch("/api/waitlist", {
         method: "POST",

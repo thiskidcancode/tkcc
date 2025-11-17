@@ -1,15 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import {
-  ChevronRight,
-  Star,
-  Rocket,
-  Trophy,
-  Heart,
-  Users,
-  Calendar,
-  Gift,
-} from "lucide-react";
+// Icons are rendered as emojis in this component
 import Image from "next/image";
 import { useStripe } from "../hooks/useStripe";
 import { useWaitlistCount } from "../hooks/useWaitlistCount";
@@ -24,7 +15,6 @@ export default function Home() {
   // Determine environment for display
   const isTestMode =
     process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY?.includes("pk_test_");
-  const isProduction = process.env.NODE_ENV === "production" && !isTestMode;
 
   const structuredData = {
     "@context": "https://schema.org",

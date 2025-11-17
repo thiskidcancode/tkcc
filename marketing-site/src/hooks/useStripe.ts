@@ -40,11 +40,13 @@ export const useStripe = () => {
       }
 
       if (data.sessionId) {
-        const result = await stripe.redirectToCheckout({
+        // Use type assertion to handle Stripe.js type issues
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const result = await (stripe as any).redirectToCheckout({
           sessionId: data.sessionId,
         });
 
-        if (result.error) {
+        if (result?.error) {
           console.error("Stripe redirect error:", result.error);
           alert(`Payment error: ${result.error.message}`);
         }

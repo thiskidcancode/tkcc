@@ -15,9 +15,7 @@ import {
 const MAX_REGISTRATIONS_PER_HOUR = 3;
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
 
-// Twilio opt-in compliance text
-const TWILIO_OPT_IN_TEXT =
-  "By checking this box, you consent to receive SMS notifications from ThisKidCanCode. Message and data rates may apply. You can opt out at any time by replying STOP.";
+
 
 /**
  * Sanitize user input to prevent XSS attacks
@@ -117,7 +115,7 @@ async function checkRateLimit(ip: string): Promise<boolean> {
 
   // Clean up old registrations (older than 1 hour)
   registrations = registrations.filter(
-    (timestamp) => now - timestamp < RATE_LIMIT_WINDOW_MS
+    (timestamp: number) => now - timestamp < RATE_LIMIT_WINDOW_MS
   );
 
   // Check if limit exceeded
