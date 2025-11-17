@@ -22,7 +22,8 @@ jobs:
                       const validPatterns = [
                         /^(feat|fix|docs|chore|test|refactor)\/\d+-[\w-]+$/,  // feat/123-feature-name
                         /^(hotfix|release)\/[\w.-]+$/,                        // hotfix/critical-fix
-                        /^copilot-[\w-]+$/                                    // Allow copilot branches temporarily
+                        /^copilot\/[\w-]+$/,                                  // Allow copilot branches temporarily
+                        /^copilot\/\d+-[\w-]+$/                               // Preferred copilot format
                       ];
 
                       const isValid = validPatterns.some(pattern => pattern.test(branchName));
