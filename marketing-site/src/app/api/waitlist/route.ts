@@ -63,7 +63,6 @@ function isValidName(name: string): boolean {
   // Detect common spam patterns
   const spamPatterns = [
     /test/i, /asdf/i, /qwerty/i, /admin/i, /null/i, /undefined/i,
-    /^[a-z]\1+$/i, // Repeated characters like "aaaa"
     /^\d+$/, // All numbers
     /([a-zA-Z])\1{3,}/, // More than 3 repeated characters anywhere
   ];
