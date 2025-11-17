@@ -78,7 +78,7 @@ fix(config): remove static export to enable API routes for Vercel
 
 #### Standard Format
 
-- `feat/feature-name` - New features  
+- `feat/feature-name` - New features
 - `fix/bug-description` - Bug fixes
 - `docs/update-readme` - Documentation
 - `chore/update-deps` - Maintenance
@@ -95,7 +95,7 @@ fix/456-mobile-navigation-bug
 docs/789-api-documentation-update
 chore/101-dependency-security-updates
 
-# GitHub Copilot agent work  
+# GitHub Copilot agent work
 copilot/234-analytics-api-endpoints
 copilot/235-test-coverage-suite
 copilot/236-progress-dashboard-component
@@ -104,8 +104,9 @@ copilot/236-progress-dashboard-component
 #### Branch Visibility Benefits
 
 **At a glance identification:**
+
 - `feat/` = Human developer feature work
-- `copilot/` = AI agent automated work  
+- `copilot/` = AI agent automated work
 - `fix/` = Human bug fixes
 - Easy to filter: `git branch | grep copilot`
 
@@ -117,7 +118,7 @@ copilot/236-progress-dashboard-component
 
 ```bash
 # Human Developer Workflow
-# Step 1: Create issue #234 "Add Stripe payment integration"  
+# Step 1: Create issue #234 "Add Stripe payment integration"
 # Step 2: Create branch
 git checkout -b feat/234-stripe-payment-integration
 
@@ -129,7 +130,7 @@ Implements payment flow for issue #234"
 # GitHub Copilot Agent Workflow
 # Step 1: Create issue with 'copilot-agent' label
 # Step 2: Assign copilot to issue
-gh issue assign 235 --assignee "app/github-copilot"  
+gh issue assign 235 --assignee "app/github-copilot"
 # Step 3: Copilot creates branch automatically
 # Result: copilot/235-analytics-api-endpoints
 ```
@@ -352,18 +353,18 @@ module.exports = {
 
 Add to `~/.gitconfig`:
 
-```ini
+````ini
 [alias]
   hist = log --oneline --graph --decorate --all
   squash = merge --squash
   pushf = push --force-with-lease
   cleanup = !git branch --merged | grep -v "\*\|main\|develop" | xargs -n 1 git branch -d
-  
+
   # Issue-driven development aliases
   issue-branch = "!f() { gh issue develop $1 --checkout; }; f"
   issue-list = "!gh issue list"
   pr-for-issue = "!f() { gh pr create --title \"$(gh issue view $1 --json title --jq .title)\" --body \"Closes #$1\"; }; f"
-  
+
   # AI/Human workflow aliases
   copilot-branches = "!git branch -r | grep copilot/"
   copilot-prs = "!gh pr list --author app/github-copilot"
@@ -380,7 +381,7 @@ Since our platform teaches kids to code, model good practices:
 feat(wizard): add celebration confetti when quest completes
 fix(wizard): ensure progress saves between browser sessions
 docs(readme): add step-by-step setup for new contributors
-```
+````
 
 ### Issue-Driven Development for Education
 
@@ -408,7 +409,7 @@ track their coding progress and stay motivated."
 **Educational Issue Labels:**
 
 - `student-facing` - Features students directly interact with
-- `educator-tools` - Features for teachers and mentors  
+- `educator-tools` - Features for teachers and mentors
 - `accessibility` - Ensuring platform works for all learners
 - `performance` - Optimizations for better learning experience
 - `bug-student-reported` - Issues discovered by student users
@@ -422,10 +423,11 @@ track their coding progress and stay motivated."
 ### AI/Human Workflow Management
 
 **Branch Organization by Author:**
+
 ```bash
 # View all branches by type
 git branch -r | grep "feat/"     # Human features
-git branch -r | grep "copilot/"  # AI agent work  
+git branch -r | grep "copilot/"  # AI agent work
 git branch -r | grep "fix/"      # Human bug fixes
 
 # GitHub CLI filtering
@@ -435,6 +437,7 @@ gh pr list --label "copilot-agent"        # AI-labeled work
 ```
 
 **Review Strategies:**
+
 - **AI PRs**: Focus on logic, edge cases, and integration
 - **Human PRs**: Standard code review process
 - **Mixed work**: Clearly document AI vs human contributions

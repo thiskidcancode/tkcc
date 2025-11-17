@@ -1,0 +1,136 @@
+name: ⚙️ Backend API Work for Copilot Agent
+description: Backend API development suitable for GitHub Copilot agents
+title: "[BACKEND] "
+labels: ["copilot-agent", "backend", "enhancement"]
+assignees:
+  - app/github-copilot
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🤖 GitHub Copilot Agent Work
+        This issue is designed for automated completion by GitHub Copilot agents.
+
+        **⚠️ Important Git Flow:**
+        1. Copilot should create branch from `develop` (not main)
+        2. Branch naming: `copilot/[issue-number]-[brief-description]`
+        3. PR should target `develop` branch for staging review
+        4. After review, will be merged to `main` for production
+
+        Example: `copilot/234-analytics-api-endpoints` → PR to `develop`
+
+  - type: input
+    id: api-name
+    attributes:
+      label: API Name
+      description: Name of the API or service to create
+      placeholder: e.g. Student Analytics API
+    validations:
+      required: true
+
+  - type: textarea
+    id: objective
+    attributes:
+      label: 🎯 Objective
+      description: Clear description of what this API should accomplish
+      placeholder: Build API endpoints to track and analyze student learning patterns...
+    validations:
+      required: true
+
+  - type: textarea
+    id: endpoints
+    attributes:
+      label: 📖 API Endpoints
+      description: List the specific endpoints to create
+      value: |
+        - `GET /api/analytics/student-progress?studentId={id}`
+        - `POST /api/analytics/student-progress`
+        - `GET /api/analytics/achievements?studentId={id}`
+    validations:
+      required: true
+
+  - type: dropdown
+    id: workspace
+    attributes:
+      label: 📁 Workspace
+      description: Which workspace should this API be created in?
+      options:
+        - apprenticeship-platform
+        - marketing-site
+        - community-tools
+    validations:
+      required: true
+
+  - type: textarea
+    id: data-schema
+    attributes:
+      label: 📊 Data Schema
+      description: TypeScript interfaces and data structures
+      value: |
+        ```typescript
+        interface StudentProgress {
+          studentId: string;
+          lessonId: string;
+          completedAt: Date;
+          timeSpent: number;
+          score?: number;
+          attempts: number;
+        }
+        ```
+    validations:
+      required: true
+
+  - type: textarea
+    id: requirements
+    attributes:
+      label: 📋 Requirements
+      description: Specific API requirements (use checkboxes)
+      value: |
+        - [ ] Implement proper error handling
+        - [ ] Add input validation and sanitization
+        - [ ] Include rate limiting
+        - [ ] Follow REST API conventions
+        - [ ] Add comprehensive logging
+    validations:
+      required: true
+
+  - type: textarea
+    id: security
+    attributes:
+      label: 🔐 Security Requirements
+      description: Security considerations and requirements
+      value: |
+        - [ ] Validate all input parameters
+        - [ ] Implement proper authentication
+        - [ ] Add request rate limiting
+        - [ ] Sanitize all user data
+        - [ ] Include CORS configuration
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: 🧪 Acceptance Criteria
+      description: Specific criteria for completion (use checkboxes)
+      value: |
+        - [ ] All endpoints return proper HTTP status codes
+        - [ ] Input validation prevents malformed requests
+        - [ ] Responses follow consistent JSON structure
+        - [ ] Includes comprehensive error handling
+        - [ ] Unit tests cover all endpoints
+        - [ ] API documentation is complete
+    validations:
+      required: true
+
+  - type: textarea
+    id: file-locations
+    attributes:
+      label: 📁 File Locations
+      description: Specify where files should be created
+      value: |
+        - API routes: `/[workspace]/src/pages/api/[feature]/`
+        - Types: `/[workspace]/src/types/[feature].ts`
+        - Tests: `/[workspace]/tests/api/[feature].test.ts`
+    validations:
+      required: true

@@ -1,0 +1,152 @@
+name: 🧪 Testing Work for Copilot Agent
+description: Test coverage development suitable for GitHub Copilot agents
+title: "[TESTING] "
+labels: ["copilot-agent", "testing", "enhancement"]
+assignees:
+  - app/github-copilot
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🤖 GitHub Copilot Agent Work
+        This issue is designed for automated completion by GitHub Copilot agents.
+
+        **⚠️ Important Git Flow:**
+        1. Copilot should create branch from `develop` (not main)
+        2. Branch naming: `copilot/[issue-number]-[brief-description]`
+        3. PR should target `develop` branch for staging review
+        4. After review, will be merged to `main` for production
+
+        Example: `copilot/345-component-test-coverage` → PR to `develop`
+
+  - type: input
+    id: test-suite-name
+    attributes:
+      label: Test Suite Name
+      description: Name of the test suite or feature being tested
+      placeholder: e.g. Component Test Coverage Suite
+    validations:
+      required: true
+
+  - type: textarea
+    id: objective
+    attributes:
+      label: 🎯 Objective
+      description: Clear description of what testing should be accomplished
+      placeholder: Create comprehensive test coverage for existing React components...
+    validations:
+      required: true
+
+  - type: textarea
+    id: components-to-test
+    attributes:
+      label: 🧩 Components to Test
+      description: List specific components, hooks, or functions that need tests
+      value: |
+        - [ ] `CodingAdventureWizard.tsx`
+        - [ ] `FeatureFlagDashboard.tsx`
+        - [ ] Custom hooks in `/lib/`
+        - [ ] Payment flow integration
+        - [ ] UI component snapshots
+    validations:
+      required: true
+
+  - type: dropdown
+    id: workspace
+    attributes:
+      label: 📁 Workspace
+      description: Which workspace should these tests be created in?
+      options:
+        - apprenticeship-platform
+        - marketing-site
+        - community-tools
+        - mobile-app
+    validations:
+      required: true
+
+  - type: textarea
+    id: testing-strategy
+    attributes:
+      label: 🧪 Testing Strategy
+      description: Types of tests and approaches to use
+      value: |
+        - Unit tests with Jest and React Testing Library
+        - Integration tests for user workflows
+        - Snapshot tests for UI consistency
+        - Mock external dependencies (Stripe, APIs)
+        - Test accessibility features
+    validations:
+      required: true
+
+  - type: textarea
+    id: coverage-goals
+    attributes:
+      label: ✅ Test Coverage Goals
+      description: Specific testing objectives (use checkboxes)
+      value: |
+        - [ ] Component rendering without errors
+        - [ ] User interaction handling
+        - [ ] State management logic
+        - [ ] Error boundary behavior
+        - [ ] Accessibility compliance
+        - [ ] Performance characteristics
+    validations:
+      required: true
+
+  - type: textarea
+    id: technical-requirements
+    attributes:
+      label: 🔧 Technical Requirements
+      description: Implementation details and constraints
+      value: |
+        - Use existing Jest configuration
+        - Follow testing best practices
+        - Include descriptive test names
+        - Add setup/teardown for external deps
+        - Mock network requests appropriately
+    validations:
+      required: true
+
+  - type: textarea
+    id: success-metrics
+    attributes:
+      label: 📊 Success Metrics
+      description: How to measure successful test implementation
+      value: |
+        - Achieve 80%+ test coverage
+        - All tests pass in CI/CD
+        - No flaky or unreliable tests
+        - Fast test execution (<30s total)
+    validations:
+      required: true
+
+  - type: textarea
+    id: file-structure
+    attributes:
+      label: 📁 File Structure
+      description: Expected test file organization
+      value: |
+        ```
+        tests/
+        ├── components/
+        │   ├── [ComponentName].test.tsx
+        ├── hooks/
+        │   └── [hookName].test.ts
+        ├── integration/
+        │   └── [feature].test.tsx
+        └── __snapshots__/
+        ```
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 🎯 Priority Level
+      description: Priority for this testing work
+      options:
+        - High (Payment/Stripe integration)
+        - Medium (User interaction components)
+        - Low (Utility functions and hooks)
+    validations:
+      required: true

@@ -1,0 +1,16 @@
+{
+  "name": "ThisKidCanCode - Free Coding Education for Kids",
+  "short_name": "ThisKidCanCode",
+  "description": "100% free coding platform teaching kids HTML, CSS, and JavaScript through gamified adventures",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#8b5cf6",
+  "icons": [
+    {
+      "src": "/tkcc-logo-200x75.png",
+      "sizes": "200x75",
+      "type": "image/png"
+    }
+  ]
+}
