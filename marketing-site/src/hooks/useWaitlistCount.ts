@@ -11,27 +11,27 @@ export function useWaitlistCount() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    async function fetchCount() {
-      try {
-        const response = await fetch("/api/waitlist/count");
-        const data: WaitlistCountResponse = await response.json();
+  const fetchCount = async () => {
+    try {
+      const response = await fetch("/api/waitlist/count");
+      const data: WaitlistCountResponse = await response.json();
 
-        if (data.success && typeof data.totalCount === "number") {
-          setCount(data.totalCount);
-        } else {
-          setError("Failed to fetch waitlist count");
-        }
-      } catch (err) {
-        console.error("Error fetching waitlist count:", err);
+      if (data.success && typeof data.totalCount === "number") {
+        setCount(data.totalCount);
+      } else {
         setError("Failed to fetch waitlist count");
-      } finally {
-        setIsLoading(false);
       }
+    } catch (err) {
+      console.error("Error fetching waitlist count:", err);
+      setError("Failed to fetch waitlist count");
+    } finally {
+      setIsLoading(false);
     }
+  };
 
+  useEffect(() => {
     fetchCount();
   }, []);
 
-  return { count, isLoading, error };
+  return { count, isLoading, error, refresh: fetchCount };
 }

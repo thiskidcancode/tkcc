@@ -16,7 +16,7 @@ const RATE_LIMIT_FILE = path.join(DATA_DIR, "rate-limits.json");
 const MAX_REGISTRATIONS_PER_HOUR = 3;
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
 const DEFAULT_START_COUNT = parseInt(
-  process.env.WAITLIST_START_COUNT || "0",
+  process.env.WAITLIST_START_COUNT || "366",
   10
 );
 
@@ -26,31 +26,70 @@ export const TWILIO_OPT_IN_TEXT =
 
 /**
  * Sanitize user input to prevent XSS attacks
- * 
- * Note: This is a defense-in-depth measure. The primary XSS protection comes from:
- * 1. Input validation (email/phone format checks)
- * 2. JSON storage (not HTML rendering in this API)
- * 3. Content-Type headers in responses
- * 
- * When displaying this data in a frontend, ALWAYS use proper escaping:
- * - React: JSX automatically escapes
- * - HTML: Use textContent or proper HTML escaping functions
- * 
- * This function removes common XSS vectors as an additional safety layer.
  */
 function sanitizeInput(input: string): string {
-  // Remove null bytes
   let sanitized = input.replace(/\0/g, "");
-  
-  // Remove all potentially dangerous patterns in a single comprehensive pass
-  // Pattern explanation:
-  // - [<>] : Remove angle brackets (HTML tags)
-  // - \b(javascript|data|vbscript):\S* : Remove dangerous URL schemes
-  // - \bon[a-z]+\s*=\s*["']?[^"']*["']? : Remove event handler attributes
-  // Using a single regex to prevent bypass attacks through sequential replacement
   sanitized = sanitized.replace(/[<>]|\b(?:javascript|data|vbscript):\S*|\bon[a-z]+\s*=\s*(?:["'][^"']*["']?)?/gi, "");
-  
   return sanitized.trim();
+}
+
+/**
+ * Validate name for realistic human names
+ */
+function isValidName(name: string): boolean {
+  // Must be 2-50 characters
+  if (name.length < 2 || name.length > 50) return false;
+  
+  // Only letters, spaces, hyphens, apostrophes
+  if (!/^[a-zA-Z\s'-]+$/.test(name)) return false;
+  
+  // Must have at least 2 words (first and last name)
+  const words = name.trim().split(/\s+/);
+  if (words.length < 2) return false;
+  
+  // Validate each word
+  for (const word of words) {
+    // Each word must be at least 2 characters
+    if (word.length < 2) return false;
+    
+    // Check for repeated characters (more than 3 in a row)
+    if (/([a-zA-Z])\1{3,}/.test(word)) return false;
+    
+    // Check for excessive consonants or vowels in a row
+    if (/[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ]{5,}/.test(word)) return false;
+    if (/[aeiouAEIOU]{4,}/.test(word)) return false;
+  }
+  
+  // Detect common spam patterns
+  const spamPatterns = [
+    /test/i, /asdf/i, /qwerty/i, /admin/i, /null/i, /undefined/i,
+    /^[a-z]\1+$/i, // Repeated characters like "aaaa"
+    /^\d+$/, // All numbers
+    /([a-zA-Z])\1{3,}/, // More than 3 repeated characters anywhere
+  ];
+  
+  return !spamPatterns.some(pattern => pattern.test(name));
+}
+
+/**
+ * Enhanced email validation
+ */
+function isValidEmailEnhanced(email: string): boolean {
+  // Basic format check
+  if (!isValidEmail(email)) return false;
+  
+  // Additional checks
+  if (email.includes('..')) return false;
+  if (email.startsWith('.') || email.endsWith('.')) return false;
+  
+  // Check for common spam domains/patterns
+  const spamPatterns = [
+    /test@/i, /admin@/i, /noreply@/i, /no-reply@/i,
+    /@test\./i, /@example\./i, /@spam\./i,
+    /\+.*\+.*@/, // Multiple + signs
+  ];
+  
+  return !spamPatterns.some(pattern => pattern.test(email));
 }
 
 /**
@@ -230,9 +269,9 @@ export async function POST(request: NextRequest) {
     const email = sanitizeInput(body.email.toLowerCase());
     const phone = sanitizeInput(body.phone);
 
-    // Validate email format
-    if (!isValidEmail(email)) {
-      console.warn(`⚠️ Invalid email format: ${email}`);
+    // Validate email format with enhanced checks
+    if (!isValidEmailEnhanced(email)) {
+      console.warn(`⚠️ Invalid or suspicious email: ${email}`);
       return NextResponse.json(
         {
           success: false,
@@ -255,13 +294,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate name length
-    if (name.length < 2 || name.length > 100) {
-      console.warn(`⚠️ Invalid name length: ${name}`);
+    // Validate name format and content
+    if (!isValidName(name)) {
+      console.warn(`⚠️ Invalid name format or content: ${name}`);
       return NextResponse.json(
         {
           success: false,
-          message: "Name must be between 2 and 100 characters.",
+          message: "Please enter a real full name (first and last name).",
         } as WaitlistResponse,
         { status: 400 }
       );

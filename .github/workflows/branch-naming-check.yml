@@ -1,79 +1,79 @@
 name: Branch Naming Convention Check
 
 on:
-    pull_request:
-        types: [opened, synchronize, reopened]
-    push:
-        branches-ignore:
-            - main
-            - develop
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches-ignore:
+      - main
+      - develop
 
 jobs:
-    check-branch-name:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Check Branch Naming Convention
-              uses: actions/github-script@v7
-              with:
-                  script: |
-                      const branchName = context.payload.pull_request?.head?.ref || context.ref.replace('refs/heads/', '');
+  check-branch-name:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Branch Naming Convention
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const branchName = context.payload.pull_request?.head?.ref || context.ref.replace('refs/heads/', '');
 
-                      // Valid patterns: type/issue-number-description
-                      const validPatterns = [
-                        /^(feat|fix|docs|chore|test|refactor)\/\d+-[\w-]+$/,  // feat/123-feature-name
-                        /^(hotfix|release)\/[\w.-]+$/,                        // hotfix/critical-fix
-                        /^copilot\/[\w-]+$/,                                  // Allow copilot branches temporarily
-                        /^copilot\/\d+-[\w-]+$/                               // Preferred copilot format
-                      ];
+            // Valid patterns: type/issue-number-description
+            const validPatterns = [
+              /^(feat|fix|docs|chore|test|refactor)\/\d+-[\w-]+$/,  // feat/123-feature-name
+              /^(hotfix|release)\/[\w.-]+$/,                        // hotfix/critical-fix
+              /^copilot\/[\w-]+$/,                                  // Allow copilot branches temporarily
+              /^copilot\/\d+-[\w-]+$/                               // Preferred copilot format
+            ];
 
-                      const isValid = validPatterns.some(pattern => pattern.test(branchName));
+            const isValid = validPatterns.some(pattern => pattern.test(branchName));
 
-                      if (!isValid) {
-                        const message = `
-                        ❌ Branch name "${branchName}" doesn't follow our naming convention!
-                        
-                        **Required Format:** \`type/issue-number-description\`
-                        
-                        **Examples:**
-                        - \`feat/123-student-dashboard\` 
-                        - \`fix/456-payment-bug\`
-                        - \`docs/789-api-documentation\`
-                        
-                        **Steps to Fix:**
-                        1. Create or find related GitHub issue
-                        2. Rename branch: \`git branch -m ${branchName} type/issue-number-description\`
-                        3. Force push: \`git push origin -u type/issue-number-description\`
-                        4. Update PR to use new branch
-                        
-                        See our [Git SOP](./docs/git/GIT_SOP.md#branch-naming-convention) for details.
-                        `;
-                        
-                        if (context.payload.pull_request) {
-                          await github.rest.issues.createComment({
-                            issue_number: context.payload.pull_request.number,
-                            owner: context.repo.owner,
-                            repo: context.repo.repo,
-                            body: message
-                          });
-                        }
-                        
-                        core.setFailed(`Branch name "${branchName}" doesn't follow naming convention`);
-                      } else {
-                        console.log(`✅ Branch name "${branchName}" follows naming convention`);
-                        
-                        // Extract issue number and verify it exists
-                        const issueMatch = branchName.match(/\/(\d+)-/);
-                        if (issueMatch) {
-                          const issueNumber = issueMatch[1];
-                          try {
-                            await github.rest.issues.get({
-                              owner: context.repo.owner,
-                              repo: context.repo.repo,
-                              issue_number: parseInt(issueNumber)
-                            });
-                            console.log(`✅ Issue #${issueNumber} exists and is linked`);
-                          } catch (error) {
-                            core.setFailed(`Issue #${issueNumber} referenced in branch name does not exist`);
-                          }
-                        }
-                      }
+            if (!isValid) {
+              const message = `
+              ❌ Branch name "${branchName}" doesn't follow our naming convention!
+              
+              **Required Format:** \`type/issue-number-description\`
+              
+              **Examples:**
+              - \`feat/123-student-dashboard\` 
+              - \`fix/456-payment-bug\`
+              - \`docs/789-api-documentation\`
+              
+              **Steps to Fix:**
+              1. Create or find related GitHub issue
+              2. Rename branch: \`git branch -m ${branchName} type/issue-number-description\`
+              3. Force push: \`git push origin -u type/issue-number-description\`
+              4. Update PR to use new branch
+              
+              See our [Git SOP](./docs/git/GIT_SOP.md#branch-naming-convention) for details.
+              `;
+              
+              if (context.payload.pull_request) {
+                await github.rest.issues.createComment({
+                  issue_number: context.payload.pull_request.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body: message
+                });
+              }
+              
+              core.setFailed(`Branch name "${branchName}" doesn't follow naming convention`);
+            } else {
+              console.log(`✅ Branch name "${branchName}" follows naming convention`);
+              
+              // Extract issue number and verify it exists
+              const issueMatch = branchName.match(/\/(\d+)-/);
+              if (issueMatch) {
+                const issueNumber = issueMatch[1];
+                try {
+                  await github.rest.issues.get({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: parseInt(issueNumber)
+                  });
+                  console.log(`✅ Issue #${issueNumber} exists and is linked`);
+                } catch (error) {
+                  core.setFailed(`Issue #${issueNumber} referenced in branch name does not exist`);
+                }
+              }
+            }

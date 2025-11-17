@@ -68,7 +68,7 @@ export default function Home() {
   }, []);
 
   const { createCheckoutSession } = useStripe();
-  const { count: waitlistCount } = useWaitlistCount();
+  const { count: waitlistCount, refresh: refreshWaitlistCount } = useWaitlistCount();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-green-500 relative overflow-hidden">
@@ -155,7 +155,10 @@ export default function Home() {
               <div className="text-3xl font-bold text-white">5,000+</div>
               <div className="text-white/80">Future Coders Trained</div>
             </div>
-            <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6">
+            <button
+              onClick={() => setShowComingSoon(true)}
+              className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 hover:bg-white/30 hover:scale-105 transition-all duration-200 cursor-pointer text-left"
+            >
               <div className="text-4xl mb-2">🚀</div>
               <div className="text-3xl font-bold text-white">
                 {waitlistCount !== null
@@ -163,7 +166,10 @@ export default function Home() {
                   : "---"}
               </div>
               <div className="text-white/80">On Launch Waitlist</div>
-            </div>
+              <div className="text-yellow-300 text-sm font-semibold mt-2">
+                👆 Click to Join!
+              </div>
+            </button>
             <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6">
               <div className="text-4xl mb-2">📅</div>
               <div className="text-3xl font-bold text-white">11+</div>
@@ -367,7 +373,10 @@ export default function Home() {
 
         {/* Waitlist Form */}
         {showComingSoon && (
-          <WaitlistForm onClose={() => setShowComingSoon(false)} />
+          <WaitlistForm 
+            onClose={() => setShowComingSoon(false)} 
+            onSuccess={refreshWaitlistCount}
+          />
         )}
 
         {/* Footer */}

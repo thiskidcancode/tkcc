@@ -11,13 +11,25 @@ body:
         ## 🤖 GitHub Copilot Agent Work
         This issue is designed for automated completion by GitHub Copilot agents.
 
-        **⚠️ Important Git Flow:**
-        1. Copilot should create branch from `develop` (not main)
-        2. Branch naming: `copilot/[issue-number]-[brief-description]`
-        3. PR should target `develop` branch for staging review
-        4. After review, will be merged to `main` for production
+        **🚨 CRITICAL: Branch Naming Convention - MUST FOLLOW EXACTLY**
+        ```
+        Branch Name Format: copilot/[ISSUE-NUMBER]-[brief-description]
+        ```
 
-        Example: `copilot/345-component-test-coverage` → PR to `develop`
+        **⚠️ MANDATORY Git Flow Instructions:**
+        1. **CREATE BRANCH FROM:** `develop` branch (NEVER from main)
+        2. **BRANCH NAME:** `copilot/[THIS-ISSUE-NUMBER]-[description]` 
+        3. **PR TARGET:** `develop` branch (for staging deployment)
+        4. **FINAL MERGE:** After review, `develop` → `main` (production)
+
+        **✅ Correct Example for this issue:**
+        - Branch: `copilot/[ISSUE-NUMBER]-payment-tests` 
+        - PR: `copilot/[ISSUE-NUMBER]-payment-tests` → `develop`
+
+        **❌ Incorrect Examples:**
+        - ~~`test/add-payment-tests`~~ (wrong prefix)
+        - ~~`copilot/add-e2e-payment-tests`~~ (missing issue number)
+        - ~~PR to `main`~~ (wrong target)
 
   - type: input
     id: test-suite-name
