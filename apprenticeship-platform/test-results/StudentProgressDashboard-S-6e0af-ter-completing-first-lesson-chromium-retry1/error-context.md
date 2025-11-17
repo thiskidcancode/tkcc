@@ -1,0 +1,126 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - alert:
+      - generic:
+        - generic: 🎯 First Steps Unlocked!
+      - generic: 🎉
+      - generic: ✨
+      - generic: 🎉
+      - generic: 🎉
+      - generic: 🎉
+      - generic: 🎊
+      - generic: ✨
+      - generic: 🎉
+      - generic: 🎊
+      - generic: ✨
+      - generic: ✨
+      - generic: 🎉
+      - generic: 🎉
+      - generic: ✨
+      - generic: ✨
+      - generic: ✨
+      - generic: ⭐
+      - generic: ⭐
+      - generic: ✨
+      - generic: 🎉
+      - generic: 🎊
+      - generic: 🎊
+      - generic: ✨
+      - generic: 🎊
+      - generic: ✨
+      - generic: ⭐
+      - generic: 🎊
+      - generic: 🌟
+      - generic: ⭐
+      - generic: 🎉
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - heading "My Coding Journey" [level=1] [ref=e5]:
+          - img [ref=e6]
+          - text: My Coding Journey
+        - paragraph [ref=e11]: Track your progress and earn achievements!
+      - generic [ref=e12]:
+        - region "Total points" [ref=e13]:
+          - generic [ref=e14]:
+            - img [ref=e15]
+            - generic [ref=e17]:
+              - generic [ref=e18]: "100"
+              - generic [ref=e19]: Total Points
+        - region "Completed lessons" [ref=e20]:
+          - generic [ref=e21]:
+            - img [ref=e22]
+            - generic [ref=e25]:
+              - generic [ref=e26]: 1/5
+              - generic [ref=e27]: Lessons Done
+        - region "Current streak" [ref=e28]:
+          - generic [ref=e29]:
+            - img [ref=e30]
+            - generic [ref=e32]:
+              - generic [ref=e33]: 0 🔥
+              - generic [ref=e34]: Day Streak
+      - region "Overall progress" [ref=e35]:
+        - generic [ref=e36]:
+          - heading "Overall Progress" [level=2] [ref=e37]
+          - generic [ref=e38]: 20%
+        - 'progressbar "Progress: 20 percent complete" [ref=e40]':
+          - img [ref=e41]
+      - generic [ref=e47]:
+        - heading "Your Lessons" [level=2] [ref=e48]:
+          - img [ref=e49]
+          - text: Your Lessons
+        - generic [ref=e52]:
+          - 'button "Hello World: Your first program. Completed. Click to toggle." [active] [pressed] [ref=e53]':
+            - generic [ref=e54]:
+              - generic [ref=e55]:
+                - heading "Hello World" [level=3] [ref=e56]
+                - paragraph [ref=e57]: Your first program
+              - img [ref=e59]
+            - generic [ref=e62]: ✓ Completed 11/17/2025
+          - 'button "Variables & Data Types: Store information in code. Not completed. Click to toggle." [ref=e63]':
+            - generic [ref=e65]:
+              - heading "Variables & Data Types" [level=3] [ref=e66]
+              - paragraph [ref=e67]: Store information in code
+          - 'button "Loops & Iteration: Repeat actions efficiently. Not completed. Click to toggle." [ref=e70]':
+            - generic [ref=e72]:
+              - heading "Loops & Iteration" [level=3] [ref=e73]
+              - paragraph [ref=e74]: Repeat actions efficiently
+          - 'button "Functions: Organize your code. Not completed. Click to toggle." [ref=e77]':
+            - generic [ref=e79]:
+              - heading "Functions" [level=3] [ref=e80]
+              - paragraph [ref=e81]: Organize your code
+          - 'button "Arrays & Objects: Work with collections. Not completed. Click to toggle." [ref=e84]':
+            - generic [ref=e86]:
+              - heading "Arrays & Objects" [level=3] [ref=e87]
+              - paragraph [ref=e88]: Work with collections
+      - generic [ref=e91]:
+        - heading "Achievements" [level=2] [ref=e92]:
+          - img [ref=e93]
+          - text: Achievements
+        - generic [ref=e99]:
+          - 'region "Achievement: First Steps. Unlocked" [ref=e100]':
+            - generic [ref=e101]: 🎯
+            - heading "First Steps" [level=3] [ref=e102]
+            - paragraph [ref=e103]: Complete your first lesson
+            - generic [ref=e104]: Unlocked 11/17/2025
+          - 'region "Achievement: Rising Star. Locked" [ref=e105]':
+            - generic [ref=e106]: ⭐
+            - heading "Rising Star" [level=3] [ref=e107]
+            - paragraph [ref=e108]: Complete 3 lessons
+            - generic [ref=e109]: 🔒 Locked
+          - 'region "Achievement: Code Warrior. Locked" [ref=e110]':
+            - generic [ref=e111]: 🏆
+            - heading "Code Warrior" [level=3] [ref=e112]
+            - paragraph [ref=e113]: Complete all lessons
+            - generic [ref=e114]: 🔒 Locked
+          - 'region "Achievement: Streak Master. Locked" [ref=e115]':
+            - generic [ref=e116]: 🔥
+            - heading "Streak Master" [level=3] [ref=e117]
+            - paragraph [ref=e118]: Learn 5 days in a row
+            - generic [ref=e119]: 🔒 Locked
+  - button "Open Next.js Dev Tools" [ref=e125] [cursor=pointer]:
+    - img [ref=e126]
+  - alert [ref=e129]
+```
