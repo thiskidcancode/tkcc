@@ -1,4 +1,19 @@
 import '@testing-library/jest-dom'
+import React from 'react'
+
+// Mock recharts
+jest.mock('recharts', () => ({
+  BarChart: (props) => React.createElement('div', { 'data-testid': 'bar-chart' }, props.children),
+  Bar: () => React.createElement('div', { 'data-testid': 'bar' }),
+  XAxis: () => React.createElement('div', { 'data-testid': 'x-axis' }),
+  YAxis: () => React.createElement('div', { 'data-testid': 'y-axis' }),
+  CartesianGrid: () => React.createElement('div', { 'data-testid': 'cartesian-grid' }),
+  Tooltip: () => React.createElement('div', { 'data-testid': 'tooltip' }),
+  ResponsiveContainer: (props) => React.createElement('div', { 'data-testid': 'responsive-container' }, props.children),
+  PieChart: (props) => React.createElement('div', { 'data-testid': 'pie-chart' }, props.children),
+  Pie: () => React.createElement('div', { 'data-testid': 'pie' }),
+  Cell: () => React.createElement('div', { 'data-testid': 'cell' })
+}), { virtual: true })
 
 // Mock Next.js router
 jest.mock('next/router', () => ({
