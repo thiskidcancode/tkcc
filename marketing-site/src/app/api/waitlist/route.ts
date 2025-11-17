@@ -16,7 +16,7 @@ const MAX_REGISTRATIONS_PER_HOUR = 3;
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
 
 // Twilio opt-in compliance text
-export const TWILIO_OPT_IN_TEXT =
+const TWILIO_OPT_IN_TEXT =
   "By checking this box, you consent to receive SMS notifications from ThisKidCanCode. Message and data rates may apply. You can opt out at any time by replying STOP.";
 
 /**
