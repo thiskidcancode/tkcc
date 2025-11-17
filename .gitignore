@@ -145,4 +145,6 @@ logs/
 # Windows
 Thumbs.db
 ehthumbs.db
-Desktop.ini
+Desktop.ini# Waitlist data files (production data)
+marketing-site/data/waitlist.json
+marketing-site/data/rate-limits.json
