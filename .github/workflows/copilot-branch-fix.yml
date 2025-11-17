@@ -1,0 +1,81 @@
+name: Auto-Fix Copilot Branch Names
+
+on:
+    pull_request:
+        types: [opened]
+
+jobs:
+    fix-copilot-branches:
+        runs-on: ubuntu-latest
+        if: startsWith(github.head_ref, 'copilot-')
+        steps:
+            - name: Suggest Branch Rename
+              uses: actions/github-script@v7
+              with:
+                  script: |
+                      const currentBranch = context.payload.pull_request.head.ref;
+                      const prNumber = context.payload.pull_request.number;
+
+                      // Extract issue number from PR body or title
+                      const prBody = context.payload.pull_request.body || '';
+                      const prTitle = context.payload.pull_request.title || '';
+
+                      // Look for issue references like "Closes #123" or "Fixes #456"
+                      const issueMatch = (prBody + ' ' + prTitle).match(/(closes?|fixes?|resolves?)\s*#(\d+)/i);
+
+                      let suggestedBranch = '';
+                      if (issueMatch) {
+                        const issueNumber = issueMatch[2];
+                        // Convert copilot branch to proper format
+                        const description = currentBranch
+                          .replace('copilot-', '')
+                          .replace(/^(fix|add|create|implement)-/, '')
+                          .substring(0, 30); // Limit length
+                        
+                        const type = currentBranch.includes('fix') ? 'fix' : 'feat';
+                        suggestedBranch = `${type}/${issueNumber}-${description}`;
+                      }
+
+                      const message = `
+                      🤖 **Copilot Branch Naming Convention**
+
+                      Hi! I noticed this PR uses a Copilot-generated branch name: \`${currentBranch}\`
+
+                      ${suggestedBranch ? `
+                      **Suggested rename:** \`${suggestedBranch}\`
+
+                      **To rename:**
+                      \`\`\`bash
+                      git branch -m ${currentBranch} ${suggestedBranch}
+                      git push origin -u ${suggestedBranch}
+                      # Then update this PR to use the new branch
+                      \`\`\`
+                      ` : `
+                      **Please rename to follow our convention:** \`type/issue-number-description\`
+
+                      Example: \`feat/123-student-dashboard\`
+                      `}
+
+                      This helps us:
+                      - ✅ Link branches to issues automatically  
+                      - ✅ Track work progress
+                      - ✅ Generate better release notes
+                      - ✅ Follow our [Git SOP](../docs/git/GIT_SOP.md)
+
+                      *This is an automated message. The PR will still be reviewed normally!*
+                      `;
+
+                      await github.rest.issues.createComment({
+                        issue_number: prNumber,
+                        owner: context.repo.owner,  
+                        repo: context.repo.repo,
+                        body: message
+                      });
+
+                      // Add a label to track these
+                      await github.rest.issues.addLabels({
+                        issue_number: prNumber,
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        labels: ['branch-naming-fix-needed']
+                      });

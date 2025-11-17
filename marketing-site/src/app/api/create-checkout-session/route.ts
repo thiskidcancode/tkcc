@@ -8,7 +8,14 @@ const stripe = process.env.STRIPE_SECRET_KEY
   : null;
 
 export async function POST(request: NextRequest) {
+  console.log("🔍 API Route called - Stripe configured:", !!stripe);
+  console.log("🔍 Environment check:", {
+    hasStripeKey: !!process.env.STRIPE_SECRET_KEY,
+    siteUrl: process.env.NEXT_PUBLIC_SITE_URL,
+  });
+
   if (!stripe) {
+    console.error("❌ Stripe not initialized - missing secret key");
     return NextResponse.json(
       {
         error:
@@ -20,8 +27,9 @@ export async function POST(request: NextRequest) {
 
   try {
     const { amount, type } = await request.json();
+    console.log("🔍 Request data:", { amount, type });
 
-    const session = await stripe.checkout.sessions.create({
+    const sessionConfig = {
       payment_method_types: ["card"],
       line_items: [
         {
@@ -45,7 +53,11 @@ export async function POST(request: NextRequest) {
       mode: type === "subscription" ? "subscription" : "payment",
       success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/?success=true`,
       cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/?canceled=true`,
-    });
+    };
+
+    console.log("🔍 Creating Stripe session with config:", sessionConfig);
+    const session = await stripe.checkout.sessions.create(sessionConfig);
+    console.log("✅ Session created successfully:", session.id);
 
     return NextResponse.json({ sessionId: session.id });
   } catch (error) {

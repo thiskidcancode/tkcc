@@ -1,0 +1,112 @@
+name: 🎨 Frontend Work for Copilot Agent
+description: Frontend component development suitable for GitHub Copilot agents
+title: "[FRONTEND] "
+labels: ["copilot-agent", "frontend", "enhancement"]
+assignees:
+  - app/github-copilot
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🤖 GitHub Copilot Agent Work
+        This issue is designed for automated completion by GitHub Copilot agents.
+
+        **⚠️ Important Git Flow:**
+        1. Copilot should create branch from `develop` (not main)
+        2. Branch naming: `copilot/[issue-number]-[brief-description]`
+        3. PR should target `develop` branch for staging review
+        4. After review, will be merged to `main` for production
+
+        Example: `copilot/123-student-progress-dashboard` → PR to `develop`
+
+  - type: input
+    id: component-name
+    attributes:
+      label: Component Name
+      description: Name of the React component to create
+      placeholder: e.g. StudentProgressDashboard
+    validations:
+      required: true
+
+  - type: textarea
+    id: objective
+    attributes:
+      label: 🎯 Objective
+      description: Clear description of what this component should accomplish
+      placeholder: Create a visual progress tracking dashboard for students...
+    validations:
+      required: true
+
+  - type: textarea
+    id: requirements
+    attributes:
+      label: 📋 Requirements
+      description: Specific requirements and features (use checkboxes)
+      value: |
+        - [ ] Design progress cards showing completed lessons
+        - [ ] Add achievement badges for milestones  
+        - [ ] Create animated progress bars
+        - [ ] Implement local storage for persistence
+        - [ ] Add celebration animations for completions
+    validations:
+      required: true
+
+  - type: dropdown
+    id: workspace
+    attributes:
+      label: 📁 Workspace
+      description: Which workspace should this component be created in?
+      options:
+        - apprenticeship-platform
+        - marketing-site
+        - community-tools
+        - mobile-app
+    validations:
+      required: true
+
+  - type: textarea
+    id: file-locations
+    attributes:
+      label: 📁 File Locations
+      description: Specify where files should be created
+      value: |
+        - Main component: `/[workspace]/src/components/[ComponentName].tsx`
+        - Styles: Use Tailwind CSS classes
+        - Tests: `/[workspace]/src/components/[ComponentName].test.tsx`
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: 🧪 Acceptance Criteria
+      description: Specific criteria for completion (use checkboxes)
+      value: |
+        - [ ] Component renders without errors
+        - [ ] Responsive design works on mobile
+        - [ ] Includes accessibility features (ARIA labels)
+        - [ ] Passes TypeScript compilation
+        - [ ] Includes comprehensive tests
+        - [ ] Follows existing code patterns
+    validations:
+      required: true
+
+  - type: textarea
+    id: technical-notes
+    attributes:
+      label: 🔧 Technical Notes
+      description: Implementation details and constraints
+      value: |
+        - Use React hooks for state management
+        - Implement TypeScript interfaces for data
+        - Follow existing naming conventions
+        - Use existing utility functions where possible
+
+  - type: textarea
+    id: user-story
+    attributes:
+      label: 🎮 User Story
+      description: User-focused description of the feature
+      placeholder: As a [user type], I want to [goal] so that [benefit]
+    validations:
+      required: true

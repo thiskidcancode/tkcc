@@ -17,31 +17,49 @@ export default function Home() {
   const [showConfetti, setShowConfetti] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [showComingSoon, setShowComingSoon] = useState(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+
+  // Determine environment for display
+  const isTestMode =
+    process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY?.includes("pk_test_");
+  const isProduction = process.env.NODE_ENV === "production" && !isTestMode;
 
   const structuredData = {
-    '@context': 'https://schema.org',
-    '@type': 'Course',
-    name: 'Free Coding Education for Kids',
-    description: 'Learn HTML, CSS, and JavaScript through gamified adventures',
+    "@context": "https://schema.org",
+    "@type": "Course",
+    name: "Free Coding Education for Kids",
+    description: "Learn HTML, CSS, and JavaScript through gamified adventures",
     provider: {
-      '@type': 'EducationalOrganization',
-      name: 'ThisKidCanCode',
+      "@type": "EducationalOrganization",
+      name: "ThisKidCanCode",
     },
-    educationalLevel: 'Beginner to Intermediate',
+    educationalLevel: "Beginner to Intermediate",
     audience: {
-      '@type': 'EducationalAudience',
-      educationalRole: 'student',
-      audienceType: 'children ages 11-18',
+      "@type": "EducationalAudience",
+      educationalRole: "student",
+      audienceType: "children ages 11-18",
     },
     offers: {
-      '@type': 'Offer',
-      price: '0',
-      priceCurrency: 'USD',
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "USD",
     },
   };
 
   useEffect(() => {
     setMounted(true);
+
+    // Check for Stripe success or cancel parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get("success") === "true") {
+      setShowSuccessMessage(true);
+      // Clean up URL
+      window.history.replaceState({}, "", window.location.pathname);
+    } else if (urlParams.get("canceled") === "true") {
+      // User canceled payment - no need for modal, just clean URL
+      window.history.replaceState({}, "", window.location.pathname);
+    }
+
     // Trigger confetti animation on load
     setTimeout(() => setShowConfetti(true), 1000);
     setTimeout(() => setShowConfetti(false), 6000);
@@ -53,20 +71,21 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-green-500 relative overflow-hidden">
       {/* Animated Background */}
       <div className="absolute inset-0">
-        {mounted && [...Array(30)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute animate-pulse"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 3}s`,
-              fontSize: `${Math.random() * 20 + 10}px`,
-            }}
-          >
-            ⭐
-          </div>
-        ))}
+        {mounted &&
+          [...Array(30)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute animate-pulse"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 3}s`,
+                fontSize: `${Math.random() * 20 + 10}px`,
+              }}
+            >
+              ⭐
+            </div>
+          ))}
       </div>
 
       {/* Confetti Effect */}
@@ -89,8 +108,18 @@ export default function Home() {
       )}
 
       <div className="relative z-10">
+        {/* Environment Indicator (Test Mode Only) */}
+        {mounted && isTestMode && (
+          <div className="fixed top-4 right-4 z-50 bg-yellow-500 text-black px-3 py-1 rounded-lg text-sm font-bold">
+            TEST MODE
+          </div>
+        )}
+
         {/* Hero Section */}
-        <section className="container mx-auto px-4 py-16 text-center" role="banner">
+        <section
+          className="container mx-auto px-4 py-16 text-center"
+          role="banner"
+        >
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
@@ -135,7 +164,7 @@ export default function Home() {
             </div>
           </div>
 
-          <button 
+          <button
             onClick={() => setShowComingSoon(true)}
             className="bg-gradient-to-r from-yellow-500 to-orange-600 text-white px-12 py-4 rounded-lg text-xl font-bold hover:scale-105 transition-transform duration-200 shadow-lg"
           >
@@ -144,10 +173,17 @@ export default function Home() {
         </section>
 
         {/* Mission Section */}
-        <section className="bg-white/95 backdrop-blur-sm py-16" role="main" aria-labelledby="mission-heading">
+        <section
+          className="bg-white/95 backdrop-blur-sm py-16"
+          role="main"
+          aria-labelledby="mission-heading"
+        >
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
-              <h2 id="mission-heading" className="text-4xl font-bold text-gray-800 mb-4">
+              <h2
+                id="mission-heading"
+                className="text-4xl font-bold text-gray-800 mb-4"
+              >
                 🎯 Our Coding Mission
               </h2>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -201,7 +237,10 @@ export default function Home() {
         <section className="py-16" aria-labelledby="support-heading">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
-              <h2 id="support-heading" className="text-4xl font-bold text-white mb-4">
+              <h2
+                id="support-heading"
+                className="text-4xl font-bold text-white mb-4"
+              >
                 💝 Support Our Mission
               </h2>
               <p className="text-xl text-white/90 max-w-3xl mx-auto">
@@ -241,7 +280,9 @@ export default function Home() {
                   </div>
                   <p className="text-gray-600 mb-6">{tier.description}</p>
                   <button
-                    onClick={() => createCheckoutSession(tier.amount, 'subscription')}
+                    onClick={() =>
+                      createCheckoutSession(tier.amount, "subscription")
+                    }
                     className="bg-gradient-to-r from-purple-500 to-blue-600 text-white px-8 py-3 rounded-lg font-bold hover:scale-105 transition-transform duration-200 w-full"
                   >
                     Subscribe ${tier.amount}/month
@@ -253,13 +294,17 @@ export default function Home() {
             <div className="text-center mt-8">
               <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-8 max-w-md mx-auto">
                 <div className="text-4xl mb-4">💝</div>
-                <h3 className="text-2xl font-bold text-gray-800 mb-4">One-Time Donation</h3>
-                <p className="text-gray-600 mb-6">Choose your own amount to support our mission</p>
+                <h3 className="text-2xl font-bold text-gray-800 mb-4">
+                  One-Time Donation
+                </h3>
+                <p className="text-gray-600 mb-6">
+                  Choose your own amount to support our mission
+                </p>
                 <div className="grid grid-cols-3 gap-3 mb-4">
                   {[25, 50, 100].map((amount) => (
                     <button
                       key={amount}
-                      onClick={() => createCheckoutSession(amount, 'donation')}
+                      onClick={() => createCheckoutSession(amount, "donation")}
                       className="bg-gradient-to-r from-green-500 to-teal-600 text-white px-4 py-2 rounded-lg font-bold hover:scale-105 transition-transform duration-200"
                     >
                       ${amount}
@@ -268,9 +313,13 @@ export default function Home() {
                 </div>
                 <button
                   onClick={() => {
-                    const amount = prompt('Enter donation amount:');
-                    if (amount && !isNaN(Number(amount)) && Number(amount) > 0) {
-                      createCheckoutSession(Number(amount), 'donation');
+                    const amount = prompt("Enter donation amount:");
+                    if (
+                      amount &&
+                      !isNaN(Number(amount)) &&
+                      Number(amount) > 0
+                    ) {
+                      createCheckoutSession(Number(amount), "donation");
                     }
                   }}
                   className="bg-gradient-to-r from-green-500 to-teal-600 text-white px-6 py-2 rounded-lg font-bold hover:scale-105 transition-transform duration-200 w-full"
@@ -282,14 +331,39 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Success Message Modal */}
+        {showSuccessMessage && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-2xl p-8 max-w-md w-full text-center">
+              <div className="text-6xl mb-4">🎉</div>
+              <h3 className="text-2xl font-bold text-gray-800 mb-4">
+                Thank You!
+              </h3>
+              <p className="text-gray-600 mb-6">
+                Your support means the world to us! Thanks to supporters like
+                you, we can keep coding education FREE for every kid. 🚀
+              </p>
+              <button
+                onClick={() => setShowSuccessMessage(false)}
+                className="bg-gradient-to-r from-green-500 to-teal-600 text-white px-8 py-3 rounded-lg font-bold hover:scale-105 transition-transform duration-200"
+              >
+                Awesome!
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Coming Soon Modal */}
         {showComingSoon && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-2xl p-8 max-w-md w-full text-center">
               <div className="text-6xl mb-4">🚀</div>
-              <h3 className="text-2xl font-bold text-gray-800 mb-4">Coming Soon!</h3>
+              <h3 className="text-2xl font-bold text-gray-800 mb-4">
+                Coming Soon!
+              </h3>
               <p className="text-gray-600 mb-6">
-                Our coding adventure platform is launching soon! Get ready for an amazing journey into programming.
+                Our coding adventure platform is launching soon! Get ready for
+                an amazing journey into programming.
               </p>
               <button
                 onClick={() => setShowComingSoon(false)}
