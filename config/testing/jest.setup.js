@@ -1,4 +1,28 @@
 import '@testing-library/jest-dom'
+import React from 'react'
+
+// Mock lucide-react icons
+jest.mock('lucide-react', () => ({
+  ChevronRight: (props) => React.createElement('svg', { ...props, 'data-testid': 'chevron-right' }),
+  Star: (props) => React.createElement('svg', { ...props, 'data-testid': 'star' }),
+  Rocket: (props) => React.createElement('svg', { ...props, 'data-testid': 'rocket' }),
+  Trophy: (props) => React.createElement('svg', { ...props, 'data-testid': 'trophy' }),
+  Heart: (props) => React.createElement('svg', { ...props, 'data-testid': 'heart' }),
+}))
+
+// Mock recharts
+jest.mock('recharts', () => ({
+  BarChart: (props) => React.createElement('div', { 'data-testid': 'bar-chart' }, props.children),
+  Bar: () => React.createElement('div', { 'data-testid': 'bar' }),
+  XAxis: () => React.createElement('div', { 'data-testid': 'x-axis' }),
+  YAxis: () => React.createElement('div', { 'data-testid': 'y-axis' }),
+  CartesianGrid: () => React.createElement('div', { 'data-testid': 'cartesian-grid' }),
+  Tooltip: () => React.createElement('div', { 'data-testid': 'tooltip' }),
+  ResponsiveContainer: (props) => React.createElement('div', { 'data-testid': 'responsive-container' }, props.children),
+  PieChart: (props) => React.createElement('div', { 'data-testid': 'pie-chart' }, props.children),
+  Pie: () => React.createElement('div', { 'data-testid': 'pie' }),
+  Cell: () => React.createElement('div', { 'data-testid': 'cell' })
+}), { virtual: true })
 
 // Mock Next.js router
 jest.mock('next/router', () => ({

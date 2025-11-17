@@ -17,7 +17,7 @@
     "infrastructure:diff": "cd infrastructure && pnpm cdk diff",
     "commit": "cz",
     "prepare": "husky install",
-    "test": "jest --config config/testing/jest.config.js",
+    "test": "jest",
     "test:watch": "jest --config config/testing/jest.config.js --watch",
     "test:coverage": "jest --config config/testing/jest.config.js --coverage",
     "test:e2e": "playwright test --config config/testing/playwright.config.ts",

@@ -21,10 +21,10 @@ const customJestConfig = {
     '!**/out/**',
   ],
   
-  // Test patterns
+  // Test patterns - look for test files in apprenticeship-platform
   testMatch: [
-    '<rootDir>/apprenticeship-platform/src/**/__tests__/**/*.(test|spec).(js|jsx|ts|tsx)',
-    '<rootDir>/apprenticeship-platform/src/**/*.(test|spec).(js|jsx|ts|tsx)'
+    '<rootDir>/apprenticeship-platform/src/**/__tests__/**/*.(test|spec).(ts|tsx|js|jsx)',
+    '<rootDir>/apprenticeship-platform/src/**/*.(test|spec).(ts|tsx|js|jsx)'
   ],
   
   // Module name mapping for absolute imports
@@ -32,11 +32,6 @@ const customJestConfig = {
     '^@/(.*)$': '<rootDir>/apprenticeship-platform/src/$1',
     '^@marketing/(.*)$': '<rootDir>/marketing-site/src/$1',
     '^@curriculum/(.*)$': '<rootDir>/curriculum/$1',
-  },
-  
-  // Transform configuration
-  transform: {
-    '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { presets: ['next/babel'] }],
   },
   
   // Setup files
