@@ -7,7 +7,7 @@ const createJestConfig = nextJest({
 
 // Add any custom config to be passed to Jest
 const customJestConfig = {
-  setupFilesAfterEnv: ['<rootDir>/config/testing/jest.setup.js'],
+  setupFilesAfterEnv: ['<rootDir>/../../config/testing/jest.setup.js'],
   testEnvironment: 'jest-environment-jsdom',
   
   // Coverage configuration for government compliance
@@ -59,10 +59,10 @@ const customJestConfig = {
   ],
   
   // Module name mapping for absolute imports
-  moduleNameMapping: {
-    '^@/(.*)$': '<rootDir>/apprenticeship-platform/src/$1',
-    '^@marketing/(.*)$': '<rootDir>/marketing-site/src/$1',
-    '^@curriculum/(.*)$': '<rootDir>/curriculum/$1',
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/../../apprenticeship-platform/src/$1',
+    '^@marketing/(.*)$': '<rootDir>/../../marketing-site/src/$1',
+    '^@curriculum/(.*)$': '<rootDir>/../../curriculum/$1',
   },
   
   // Transform configuration
@@ -71,7 +71,7 @@ const customJestConfig = {
   },
   
   // Setup files
-  setupFiles: ['<rootDir>/config/testing/jest.env.js'],
+  setupFiles: ['<rootDir>/../../config/testing/jest.env.js'],
 }
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
