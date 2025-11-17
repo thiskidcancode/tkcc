@@ -26,13 +26,31 @@ export const TWILIO_OPT_IN_TEXT =
 
 /**
  * Sanitize user input to prevent XSS attacks
+ * 
+ * Note: This is a defense-in-depth measure. The primary XSS protection comes from:
+ * 1. Input validation (email/phone format checks)
+ * 2. JSON storage (not HTML rendering in this API)
+ * 3. Content-Type headers in responses
+ * 
+ * When displaying this data in a frontend, ALWAYS use proper escaping:
+ * - React: JSX automatically escapes
+ * - HTML: Use textContent or proper HTML escaping functions
+ * 
+ * This function removes common XSS vectors as an additional safety layer.
  */
 function sanitizeInput(input: string): string {
-  return input
-    .replace(/[<>]/g, "")
-    .replace(/javascript:/gi, "")
-    .replace(/on\w+=/gi, "")
-    .trim();
+  // Remove null bytes
+  let sanitized = input.replace(/\0/g, "");
+  
+  // Remove all potentially dangerous patterns in a single comprehensive pass
+  // Pattern explanation:
+  // - [<>] : Remove angle brackets (HTML tags)
+  // - \b(javascript|data|vbscript):\S* : Remove dangerous URL schemes
+  // - \bon[a-z]+\s*=\s*["']?[^"']*["']? : Remove event handler attributes
+  // Using a single regex to prevent bypass attacks through sequential replacement
+  sanitized = sanitized.replace(/[<>]|\b(?:javascript|data|vbscript):\S*|\bon[a-z]+\s*=\s*(?:["'][^"']*["']?)?/gi, "");
+  
+  return sanitized.trim();
 }
 
 /**
