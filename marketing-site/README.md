@@ -56,4 +56,4 @@ The site references the existing TKCC logo from:
 - **Tailwind CSS** for styling
 - **Stripe** for payment processing
 - **Twilio** for SMS (future integration)
-- **AWS S3 + CloudFront** for hosting
+- **AWS S3 + CloudFront** for hosting# Trigger staging deployment with updated environment variables
