@@ -58,7 +58,8 @@ export default function Home() {
   }, []);
 
   const { createCheckoutSession } = useStripe();
-  const { count: waitlistCount, refresh: refreshWaitlistCount } = useWaitlistCount();
+  const { count: waitlistCount, refresh: refreshWaitlistCount } =
+    useWaitlistCount();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-green-500 relative overflow-hidden">
@@ -363,8 +364,8 @@ export default function Home() {
 
         {/* Waitlist Form */}
         {showComingSoon && (
-          <WaitlistForm 
-            onClose={() => setShowComingSoon(false)} 
+          <WaitlistForm
+            onClose={() => setShowComingSoon(false)}
             onSuccess={refreshWaitlistCount}
           />
         )}
