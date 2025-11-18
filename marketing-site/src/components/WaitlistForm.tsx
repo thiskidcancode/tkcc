@@ -212,7 +212,7 @@ export default function WaitlistForm(props: WaitlistFormProps) {
               value={formData.name}
               onChange={handleChange}
               required
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
+              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 bg-white ${
                 validationErrors.name ? 'border-red-300' : 'border-gray-300'
               }`}
               placeholder="Enter your full name (e.g., John Smith)"
@@ -236,7 +236,7 @@ export default function WaitlistForm(props: WaitlistFormProps) {
               value={formData.email}
               onChange={handleChange}
               required
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
+              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 bg-white ${
                 validationErrors.email ? 'border-red-300' : 'border-gray-300'
               }`}
               placeholder="your@email.com"
@@ -260,7 +260,7 @@ export default function WaitlistForm(props: WaitlistFormProps) {
               value={formData.phone}
               onChange={handleChange}
               required
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
+              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 bg-white ${
                 validationErrors.phone ? 'border-red-300' : 'border-gray-300'
               }`}
               placeholder="(555) 123-4567"
