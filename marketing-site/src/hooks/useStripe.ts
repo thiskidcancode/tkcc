@@ -39,15 +39,9 @@ export const useStripe = () => {
         return;
       }
 
-      if (data.sessionId) {
-        const result = await stripe.redirectToCheckout({
-          sessionId: data.sessionId,
-        });
-
-        if (result.error) {
-          console.error("Stripe redirect error:", result.error);
-          alert(`Payment error: ${result.error.message}`);
-        }
+      if (data.url) {
+        // Modern approach: redirect to Stripe Checkout URL
+        window.location.href = data.url;
       } else {
         alert("Unable to create payment session. Please try again.");
       }

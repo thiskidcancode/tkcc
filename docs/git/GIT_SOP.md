@@ -460,12 +460,203 @@ Configure in GitHub repository settings:
 # Production branch (main)
 main -> Vercel Production (thiskidcancode.com)
 
-# Development branch (future)
-develop -> Vercel Preview (staging deployments)
+# Development branch
+develop -> Vercel Staging (staging deployments)
 
 # Feature branches
 feat/* -> Vercel Preview (per-PR deployments)
+copilot/* -> Vercel Preview (AI agent PRs)
 ```
+
+## 🔄 Merging Develop into Main (Production Release)
+
+### Pre-Merge Checklist
+
+Before merging `develop` into `main` for production release:
+
+- [ ] All features in `develop` have been tested in staging environment
+- [ ] All tests pass (`pnpm test` in relevant workspaces)
+- [ ] Linting passes (`pnpm lint` in relevant workspaces)
+- [ ] No merge conflicts with `main` branch
+- [ ] Environment variables updated in Vercel production settings (if needed)
+- [ ] API endpoints tested with production keys
+- [ ] Breaking changes documented in CHANGELOG.md
+- [ ] Team notified of upcoming deployment
+
+### Step-by-Step Merge Process
+
+#### 1. Update Local Branches
+
+```bash
+# Ensure you have latest changes from both branches
+git checkout main
+git pull origin main
+
+git checkout develop
+git pull origin develop
+```
+
+#### 2. Review Changes to be Merged
+
+```bash
+# View commits that will be merged into main
+git log main..develop --oneline
+
+# View detailed diff
+git diff main...develop
+
+# Review file changes
+git diff --name-status main...develop
+```
+
+#### 3. Create Pull Request (Recommended)
+
+**Using GitHub CLI:**
+
+```bash
+# From develop branch
+git checkout develop
+
+# Create PR with detailed description
+gh pr create \
+  --base main \
+  --head develop \
+  --title "Release: Merge develop to main for production deployment" \
+  --body "## Changes in this release
+
+- Feature 1 description
+- Feature 2 description
+- Bug fix descriptions
+
+## Testing
+- [x] Staging environment tested
+- [x] All tests passing
+- [x] No breaking changes
+
+## Deployment Notes
+- Update environment variable XYZ if needed
+- Monitor error logs for first 30 minutes
+"
+```
+
+**Using GitHub Web Interface:**
+
+1. Navigate to repository on GitHub
+2. Click "Pull Requests" → "New Pull Request"
+3. Set base: `main`, compare: `develop`
+4. Fill out PR description with release notes
+5. Request reviews from team members
+
+#### 4. Merge Strategy: Squash vs. Merge Commit
+
+**Option A: Squash Merge (Recommended for Clean History)**
+
+```bash
+# After PR approval, squash merge via GitHub UI
+# Or via CLI:
+gh pr merge --squash --delete-branch=false
+
+# Squash commit message template:
+Release: Production deployment [Date]
+
+Features:
+- Waitlist system with API endpoints
+- Frontend integration with live count
+- Rate limiting and validation
+
+Fixes:
+- Mobile navigation overflow
+- Form validation edge cases
+
+Breaking Changes: None
+```
+
+**Option B: Merge Commit (Preserves Full History)**
+
+```bash
+# Keep full development history
+gh pr merge --merge --delete-branch=false
+
+# Or manually:
+git checkout main
+git merge develop --no-ff -m "Merge develop into main for production release"
+git push origin main
+```
+
+**When to use each:**
+
+- **Squash merge**: Clean production history, many small commits in develop
+- **Merge commit**: Important to preserve full development context
+
+#### 5. Post-Merge Actions
+
+```bash
+# Verify main branch deployed successfully
+gh pr view --web  # Check deployment status
+
+# Tag the release
+git checkout main
+git pull origin main
+git tag -a v1.2.0 -m "Release v1.2.0: Waitlist system launch"
+git push origin v1.2.0
+
+# Update CHANGELOG.md
+# Add release notes to CHANGELOG.md with date and version
+git add CHANGELOG.md
+git commit -m "docs: update CHANGELOG for v1.2.0 release"
+git push origin main
+```
+
+#### 6. Verify Production Deployment
+
+```bash
+# Check Vercel deployment status
+# Visit: https://vercel.com/thiskidcancode/tkcc/deployments
+
+# Test production site
+curl https://thiskidcancode.com/api/waitlist/count
+
+# Monitor logs for errors
+# Vercel Dashboard → Project → Logs
+```
+
+#### 7. Sync Develop with Main (if needed)
+
+```bash
+# After successful production deployment
+git checkout develop
+git merge main
+git push origin develop
+```
+
+### Emergency Rollback
+
+If production deployment has critical issues:
+
+```bash
+# Option 1: Revert the merge commit
+git checkout main
+git revert -m 1 HEAD  # Revert last merge
+git push origin main
+
+# Option 2: Deploy previous release tag
+git checkout v1.1.0
+git push origin main --force-with-lease
+
+# Option 3: Vercel rollback via dashboard
+# Vercel → Deployments → Previous deployment → "Promote to Production"
+```
+
+### Best Practices for Production Releases
+
+1. **Schedule releases during low-traffic periods** - Minimize user impact
+2. **Monitor for 30 minutes post-deployment** - Watch error logs and metrics
+3. **Have rollback plan ready** - Know how to revert quickly
+4. **Document each release** - Update CHANGELOG.md with all changes
+5. **Use semantic versioning** - Tag releases as v1.2.3 (major.minor.patch)
+6. **Keep develop branch stable** - Only merge tested features
+7. **Communicate with team** - Notify before major deployments
+8. **Test in staging first** - Always verify in staging environment before production
 
 ## 🚨 Emergency Procedures
 

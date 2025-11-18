@@ -11,13 +11,25 @@ body:
         ## 🤖 GitHub Copilot Agent Work
         This issue is designed for automated completion by GitHub Copilot agents.
 
-        **⚠️ Important Git Flow:**
-        1. Copilot should create branch from `develop` (not main)
-        2. Branch naming: `copilot/[issue-number]-[brief-description]`
-        3. PR should target `develop` branch for staging review
-        4. After review, will be merged to `main` for production
+        **🚨 CRITICAL: Branch Naming Convention - MUST FOLLOW EXACTLY**
+        ```
+        Branch Name Format: copilot/[ISSUE-NUMBER]-[brief-description]
+        ```
 
-        Example: `copilot/234-analytics-api-endpoints` → PR to `develop`
+        **⚠️ MANDATORY Git Flow Instructions:**
+        1. **CREATE BRANCH FROM:** `develop` branch (NEVER from main)
+        2. **BRANCH NAME:** `copilot/[THIS-ISSUE-NUMBER]-[description]` 
+        3. **PR TARGET:** `develop` branch (for staging deployment)
+        4. **FINAL MERGE:** After review, `develop` → `main` (production)
+
+        **✅ Correct Example for this issue:**
+        - Branch: `copilot/[ISSUE-NUMBER]-waitlist-api` 
+        - PR: `copilot/[ISSUE-NUMBER]-waitlist-api` → `develop`
+
+        **❌ Incorrect Examples:**
+        - ~~`feature/add-waitlist-api`~~ (wrong prefix)
+        - ~~`copilot/add-waitlist-api-integration`~~ (missing issue number)
+        - ~~PR to `main`~~ (wrong target)
 
   - type: input
     id: api-name
@@ -134,3 +146,18 @@ body:
         - Tests: `/[workspace]/tests/api/[feature].test.ts`
     validations:
       required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ## 🔄 Final Reminder: Git Workflow
+
+        **When you start working on this issue:**
+
+        1. **Check issue number:** This is issue #[ISSUE-NUMBER]
+        2. **Create branch:** `git checkout develop && git pull && git checkout -b copilot/[ISSUE-NUMBER]-[description]`
+        3. **Work on code:** Follow all requirements above
+        4. **Create PR:** Target `develop` branch, NOT `main`
+        5. **Branch name MUST include issue number:** `copilot/[ISSUE-NUMBER]-something`
+
+        **❗ If branch name doesn't follow `copilot/[ISSUE-NUMBER]-description` format, PR will be rejected.**

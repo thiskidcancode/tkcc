@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy',
@@ -62,12 +63,12 @@ export default function Privacy() {
               <li>We never sell or share personal information with third parties</li>
               <li>Payment processing is handled securely by Stripe</li>
               <li>SMS services are provided by Twilio with industry-standard security</li>
-              <li>We comply with COPPA (Children's Online Privacy Protection Act)</li>
+              <li>We comply with COPPA (Children&apos;s Online Privacy Protection Act)</li>
             </ul>
 
             <h2 className="text-2xl font-bold text-gray-800 mb-4">👨👩👧👦 Parental Rights</h2>
             <ul className="mb-6 space-y-2">
-              <li>Parents can request deletion of their child's data at any time</li>
+              <li>Parents can request deletion of their child&apos;s data at any time</li>
               <li>Parents can opt their child out of all communications</li>
               <li>We encourage parental involvement in the coding journey</li>
               <li>No personal information is required to use our free platform</li>
@@ -87,18 +88,18 @@ export default function Privacy() {
               </p>
               <p className="text-blue-700 mt-2">
                 We may update this policy as we improve our platform. 
-                We'll notify users of any significant changes.
+                We&apos;ll notify users of any significant changes.
               </p>
             </div>
           </div>
 
           <div className="text-center mt-8">
-            <a 
+            <Link 
               href="/"
               className="bg-gradient-to-r from-purple-500 to-blue-600 text-white px-8 py-3 rounded-lg font-bold hover:scale-105 transition-transform duration-200"
             >
               🚀 Back to Adventure!
-            </a>
+            </Link>
           </div>
         </div>
       </div>

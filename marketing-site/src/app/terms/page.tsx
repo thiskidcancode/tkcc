@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Terms of Service',
@@ -44,7 +45,7 @@ export default function Terms() {
           <div className="prose prose-lg max-w-none">
             <h2 className="text-2xl font-bold text-gray-800 mb-4">🎮 Welcome to the Adventure!</h2>
             <p className="mb-6">
-              By using ThisKidCanCode, you agree to these terms. We've made them as simple as possible 
+              By using ThisKidCanCode, you agree to these terms. We&apos;ve made them as simple as possible 
               because we believe in transparency and fairness for our coding heroes and their families.
             </p>
 
@@ -91,7 +92,7 @@ export default function Terms() {
             <h2 className="text-2xl font-bold text-gray-800 mb-4">🔧 Platform Usage</h2>
             <ul className="mb-6 space-y-2">
               <li>Use our platform for educational purposes only</li>
-              <li>Don't attempt to hack, disrupt, or misuse our services</li>
+              <li>Don&apos;t attempt to hack, disrupt, or misuse our services</li>
               <li>Respect intellectual property and licensing</li>
               <li>Report bugs and issues to help us improve</li>
             </ul>
@@ -110,18 +111,18 @@ export default function Terms() {
               </p>
               <p className="text-green-700 mt-2">
                 We may update these terms as we grow and improve. 
-                We'll notify users of any significant changes.
+                We&apos;ll notify users of any significant changes.
               </p>
             </div>
           </div>
 
           <div className="text-center mt-8">
-            <a 
+            <Link 
               href="/"
               className="bg-gradient-to-r from-purple-500 to-blue-600 text-white px-8 py-3 rounded-lg font-bold hover:scale-105 transition-transform duration-200"
             >
               🚀 Back to Adventure!
-            </a>
+            </Link>
           </div>
         </div>
       </div>

@@ -43,7 +43,7 @@ The site is configured for static export to S3:
 
 1. Build creates static files in `out/` directory
 2. `deploy.sh` syncs to S3 bucket using `tkcc` AWS profile
-3. CloudFront serves the static site
+3. CloudFront serves the static assets
 
 ## Logo
 
@@ -56,4 +56,4 @@ The site references the existing TKCC logo from:
 - **Tailwind CSS** for styling
 - **Stripe** for payment processing
 - **Twilio** for SMS (future integration)
-- **AWS S3 + CloudFront** for hosting
+- **AWS S3 + CloudFront** for hosting# Trigger staging deployment with updated environment variables

@@ -1,17 +1,10 @@
 "use client";
 import { useState, useEffect } from "react";
-import {
-  ChevronRight,
-  Star,
-  Rocket,
-  Trophy,
-  Heart,
-  Users,
-  Calendar,
-  Gift,
-} from "lucide-react";
+// Icons are rendered as emojis in this component
 import Image from "next/image";
 import { useStripe } from "../hooks/useStripe";
+import { useWaitlistCount } from "../hooks/useWaitlistCount";
+import WaitlistForm from "../components/WaitlistForm";
 
 export default function Home() {
   const [showConfetti, setShowConfetti] = useState(false);
@@ -22,7 +15,6 @@ export default function Home() {
   // Determine environment for display
   const isTestMode =
     process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY?.includes("pk_test_");
-  const isProduction = process.env.NODE_ENV === "production" && !isTestMode;
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -66,6 +58,8 @@ export default function Home() {
   }, []);
 
   const { createCheckoutSession } = useStripe();
+  const { count: waitlistCount, refresh: refreshWaitlistCount } =
+    useWaitlistCount();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-green-500 relative overflow-hidden">
@@ -146,12 +140,27 @@ export default function Home() {
           </p>
 
           {/* Impact Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-5xl mx-auto mb-12">
             <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6">
               <div className="text-4xl mb-2">👥</div>
               <div className="text-3xl font-bold text-white">5,000+</div>
               <div className="text-white/80">Future Coders Trained</div>
             </div>
+            <button
+              onClick={() => setShowComingSoon(true)}
+              className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 hover:bg-white/30 hover:scale-105 transition-all duration-200 cursor-pointer text-left"
+            >
+              <div className="text-4xl mb-2">🚀</div>
+              <div className="text-3xl font-bold text-white">
+                {waitlistCount !== null
+                  ? waitlistCount.toLocaleString()
+                  : "---"}
+              </div>
+              <div className="text-white/80">On Launch Waitlist</div>
+              <div className="text-yellow-300 text-sm font-semibold mt-2">
+                👆 Click to Join!
+              </div>
+            </button>
             <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6">
               <div className="text-4xl mb-2">📅</div>
               <div className="text-3xl font-bold text-white">11+</div>
@@ -353,26 +362,12 @@ export default function Home() {
           </div>
         )}
 
-        {/* Coming Soon Modal */}
+        {/* Waitlist Form */}
         {showComingSoon && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-2xl p-8 max-w-md w-full text-center">
-              <div className="text-6xl mb-4">🚀</div>
-              <h3 className="text-2xl font-bold text-gray-800 mb-4">
-                Coming Soon!
-              </h3>
-              <p className="text-gray-600 mb-6">
-                Our coding adventure platform is launching soon! Get ready for
-                an amazing journey into programming.
-              </p>
-              <button
-                onClick={() => setShowComingSoon(false)}
-                className="bg-gradient-to-r from-purple-500 to-blue-600 text-white px-8 py-3 rounded-lg font-bold hover:scale-105 transition-transform duration-200"
-              >
-                Got it!
-              </button>
-            </div>
-          </div>
+          <WaitlistForm
+            onClose={() => setShowComingSoon(false)}
+            onSuccess={refreshWaitlistCount}
+          />
         )}
 
         {/* Footer */}
