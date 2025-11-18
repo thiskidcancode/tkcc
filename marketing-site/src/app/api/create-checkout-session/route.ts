@@ -51,15 +51,15 @@ export async function POST(request: NextRequest) {
         },
       ],
       mode: type === "subscription" ? "subscription" : "payment",
-      success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/?success=true`,
-      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/?canceled=true`,
+      success_url: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/?success=true`,
+      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/?canceled=true`,
     };
 
     console.log("🔍 Creating Stripe session with config:", sessionConfig);
     const session = await stripe.checkout.sessions.create(sessionConfig);
     console.log("✅ Session created successfully:", session.id);
 
-    return NextResponse.json({ sessionId: session.id });
+    return NextResponse.json({ url: session.url });
   } catch (error) {
     console.error("Stripe checkout error:", error);
     return NextResponse.json(
