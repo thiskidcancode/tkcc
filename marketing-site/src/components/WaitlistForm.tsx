@@ -104,11 +104,18 @@ export default function WaitlistForm(props: WaitlistFormProps) {
     try {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { honeypot, ...submitData } = formData;
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
+      
+      // Add Vercel protection bypass for staging
+      if (process.env.NEXT_PUBLIC_VERCEL_PROTECTION_BYPASS) {
+        headers["x-vercel-protection-bypass"] = process.env.NEXT_PUBLIC_VERCEL_PROTECTION_BYPASS;
+      }
+      
       const res = await fetch("/api/waitlist", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers,
         body: JSON.stringify(submitData),
       });
 

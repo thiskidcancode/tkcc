@@ -36,36 +36,44 @@ export async function initializeDatabase() {
 }
 
 export async function addWaitlistEntry(entry: Omit<WaitlistEntry, 'position' | 'registered_at'>) {
-  await initializeDatabase();
-  
-  // Get next position
-  const metadata = await prisma.waitlistMetadata.findUnique({
-    where: { key: 'last_position' }
-  });
-  
-  const currentPosition = metadata?.value || DEFAULT_START_COUNT;
-  const newPosition = currentPosition + 1;
+  try {
+    await initializeDatabase();
+    
+    // Get next position
+    const metadata = await prisma.waitlistMetadata.findUnique({
+      where: { key: 'last_position' }
+    });
+    
+    const currentPosition = metadata?.value || DEFAULT_START_COUNT;
+    const newPosition = currentPosition + 1;
 
-  // Insert entry
-  await prisma.waitlistEntry.create({
-    data: {
-      id: entry.id,
-      name: entry.name,
-      email: entry.email,
-      phone: entry.phone,
-      twilioOptIn: entry.twilio_opt_in,
-      position: newPosition
-    }
-  });
+    console.log(`📝 Adding waitlist entry: ${entry.email} at position ${newPosition}`);
 
-  // Update position counter
-  await prisma.waitlistMetadata.upsert({
-    where: { key: 'last_position' },
-    update: { value: newPosition },
-    create: { key: 'last_position', value: newPosition }
-  });
+    // Insert entry
+    await prisma.waitlistEntry.create({
+      data: {
+        id: entry.id,
+        name: entry.name,
+        email: entry.email,
+        phone: entry.phone,
+        twilioOptIn: entry.twilio_opt_in,
+        position: newPosition
+      }
+    });
 
-  return newPosition;
+    // Update position counter
+    await prisma.waitlistMetadata.upsert({
+      where: { key: 'last_position' },
+      update: { value: newPosition },
+      create: { key: 'last_position', value: newPosition }
+    });
+
+    console.log(`✅ Successfully added waitlist entry at position ${newPosition}`);
+    return newPosition;
+  } catch (error) {
+    console.error('❌ Database error in addWaitlistEntry:', error);
+    throw error;
+  }
 }
 
 export async function getWaitlistCount() {
