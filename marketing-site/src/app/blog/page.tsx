@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'This Kid Can Code Blog - Coding Tips and Education Resources',
@@ -61,12 +62,12 @@ export default function BlogPage() {
             <p className="text-gray-600 mb-6">
               Want to stay updated with the latest coding tips and This Kid Can Code news?
             </p>
-            <a 
+            <Link 
               href="/?waitlist=true"
               className="bg-gradient-to-r from-purple-500 to-blue-600 text-white px-8 py-3 rounded-lg font-bold hover:scale-105 transition-transform duration-200 inline-block"
             >
               Join Our Waitlist
-            </a>
+            </Link>
           </div>
         </div>
       </div>
