@@ -50,6 +50,10 @@ export default function Home() {
     } else if (urlParams.get("canceled") === "true") {
       // User canceled payment - no need for modal, just clean URL
       window.history.replaceState({}, "", window.location.pathname);
+    } else if (urlParams.get("waitlist") === "true") {
+      setShowComingSoon(true);
+      // Clean up URL
+      window.history.replaceState({}, "", window.location.pathname);
     }
 
     // Trigger confetti animation on load
@@ -130,13 +134,13 @@ export default function Home() {
           </div>
 
           <h1 className="text-4xl md:text-7xl font-bold text-white mb-6 animate-pulse">
-            🚀 Empowering Future Coders Since 2013! 🌟
+            🚀 This Kid Can Code - Empowering Future Coders Since 2013! 🌟
           </h1>
 
           <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-4xl mx-auto">
-            100% FREE coding adventures that transform kids into
+            This Kid Can Code offers 100% FREE coding adventures that transform kids ages 11-18 into
             <span className="text-yellow-300 font-bold"> REAL PROGRAMMERS</span>
-            !
+            using professional GitHub tools!
           </p>
 
           {/* Impact Stats */}
@@ -377,6 +381,12 @@ export default function Home() {
               © 2025 ThisKidCanCode - Empowering Future Coders Since 2013
             </p>
             <div className="space-x-6">
+              <a href="/about" className="hover:text-white transition-colors">
+                About
+              </a>
+              <a href="/blog" className="hover:text-white transition-colors">
+                Blog
+              </a>
               <a href="/privacy" className="hover:text-white transition-colors">
                 Privacy Policy
               </a>

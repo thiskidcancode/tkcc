@@ -19,8 +19,8 @@ export const metadata: Metadata = {
     default: "ThisKidCanCode - Free Coding Education for Kids Ages 11-18",
     template: "%s | ThisKidCanCode"
   },
-  description: "100% free coding platform teaching kids HTML, CSS, and JavaScript through gamified adventures. 5,000+ students trained since 2013. Professional GitHub tools for real-world skills.",
-  keywords: ["coding for kids", "free programming education", "HTML CSS JavaScript", "GitHub for students", "computer science education", "coding bootcamp kids", "learn to code free", "programming for teens"],
+  description: "This Kid Can Code - 100% free coding platform teaching kids HTML, CSS, and JavaScript through gamified adventures. 5,000+ students trained since 2013. Professional GitHub tools for real-world skills.",
+  keywords: ["this kid can code", "thiskidcancode", "coding for kids", "free programming education", "HTML CSS JavaScript", "GitHub for students", "computer science education", "coding bootcamp kids", "learn to code free", "programming for teens", "kids coding platform", "free coding classes", "coding education", "programming bootcamp", "web development for kids"],
   authors: [{ name: "ThisKidCanCode" }],
   creator: "ThisKidCanCode",
   publisher: "ThisKidCanCode",
@@ -34,8 +34,8 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   openGraph: {
-    title: "ThisKidCanCode - Free Coding Education for Kids",
-    description: "100% free coding platform teaching kids HTML, CSS, and JavaScript through gamified adventures. 5,000+ students trained since 2013.",
+    title: "This Kid Can Code - Free Coding Education for Kids",
+    description: "This Kid Can Code - 100% free coding platform teaching kids HTML, CSS, and JavaScript through gamified adventures. 5,000+ students trained since 2013.",
     url: 'https://thiskidcancode.com',
     siteName: 'ThisKidCanCode',
     images: [
@@ -51,8 +51,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: "ThisKidCanCode - Free Coding Education for Kids",
-    description: "100% free coding platform teaching kids HTML, CSS, and JavaScript through gamified adventures. 5,000+ students trained since 2013.",
+    title: "This Kid Can Code - Free Coding Education for Kids",
+    description: "This Kid Can Code - 100% free coding platform teaching kids HTML, CSS, and JavaScript through gamified adventures. 5,000+ students trained since 2013.",
     images: ['/tkccFbLogo.png'],
   },
   robots: {
@@ -74,8 +74,9 @@ export const metadata: Metadata = {
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'EducationalOrganization',
-  name: 'ThisKidCanCode',
-  description: '100% free coding platform teaching kids HTML, CSS, and JavaScript through gamified adventures.',
+  name: 'This Kid Can Code',
+  alternateName: ['ThisKidCanCode', 'TKCC'],
+  description: 'This Kid Can Code - 100% free coding platform teaching kids HTML, CSS, and JavaScript through gamified adventures.',
   url: 'https://thiskidcancode.com',
   logo: 'https://thiskidcancode.com/tkccFbLogo.png',
   foundingDate: '2013',
